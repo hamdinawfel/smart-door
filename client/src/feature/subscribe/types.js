@@ -1,0 +1,4 @@
+export const LOADING = 'LOADING';
+export const SUCCESS_SUBSCRIBE = 'SUCCESS_SUBSCRIBE';
+export const SET_ERROR = 'SET_ERROR';
+export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';

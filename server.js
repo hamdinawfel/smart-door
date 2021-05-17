@@ -24,8 +24,8 @@ app.use(express.json());
 app.use(sslRedirect());
 
 // Connect to MongoDB
-const url = 'mongodb://localhost:27017/smart-door'; 
-// const url = process.env.mongoURI
+// const url = 'mongodb://localhost:27017/smart-door'; 
+const url = process.env.mongoURI
 mongoose
 .connect(url, {
 useUnifiedTopology: true,
