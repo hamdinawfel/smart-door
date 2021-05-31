@@ -14,22 +14,18 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
-    theme: {
-        type: String,
-        default: '#31A8FF'
-    },
     category: {
         type: String,
         required: true
     },
     tags:[String],
-    inStock: {
-        type: Boolean,
-        default: true
+    stock: {
+        type: Number,
+        required: true,
     },
-    inBasket: {
-        type: Boolean,
-        default: false
+    alertStock: {
+        type: Number,
+        required: true,
     },
     price: {
         type: Number,

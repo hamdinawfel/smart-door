@@ -15,10 +15,10 @@ if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Veuillez remplir ce champ";
   }
 if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
-    errors.password = "Le mot de passe doit être au moins de 6 caractères";
+    errors.password = "Weak Password";
   }
 if (!Validator.equals(data.password, data.password2)) {
-    errors.password2 = "Veuillez vérifier votre mot de passe";
+    errors.password2 = "Passwords must match";
   }
 return {
     errors,

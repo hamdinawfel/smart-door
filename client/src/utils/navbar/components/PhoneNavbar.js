@@ -20,7 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 //assets
-import logo from '../assets/mamogamers.png'
+import logo from '../assets/logo.jpg'
 
 //redux
 
@@ -147,7 +147,7 @@ function NestedList(props) {
     </List>
   );
 }
-function MobileNavbar(props) {
+function PhoneNavbar(props) {
   const classes = useStyles();
 
 const [open, setOpen] = React.useState(false)
@@ -199,4 +199,4 @@ const mapStateToProps = (state) => ({
  export default connect(
    mapStateToProps,
    mapActionsToProps
- )(MobileNavbar);
+ )(PhoneNavbar);

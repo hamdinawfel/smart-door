@@ -1,6 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from "react-router-dom";
+//Mui
 import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
 
 //icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,25 +12,41 @@ import {faYoutube} from '@fortawesome/fontawesome-free-brands';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import RoomIcon from '@material-ui/icons/Room';
 import PhoneIcon from '@material-ui/icons/Phone';
+ //logo
+ import logo from '../navbar/assets/logo.jpg'
+
 export default function Footer() {
+  let history = useHistory();
+
+  const handleNavigateToHome = ()=>{
+    history.push('/')
+  };
+
+  const handleNavigateToCatalog = ()=>{
+    history.push('/catalog/all')
+  };
+
+  const handleNavigateToAuth= ()=>{
+    history.push('/connextion')
+  };
   return (
-    <footer class="footer-distributed">
-          <div class="footer-left">
+    <footer className="footer-distributed">
+          <div className="footer-left">
+          <div style={{ display:'flex', alignItems:'center'}}>
+            <img src={logo} alt="Dinari" style={{width:70, cursor:'pointer'}} onClick={handleNavigateToHome}/>
+            <h3  onClick={handleNavigateToHome}>Dinari</h3>
+          </div>
     
-            <h3>Company<span>logo</span></h3>
-    
-            <p class="footer-links">
-              <a href="#" class="link-1">Accueil</a>
+            <p className="footer-links">
+              <a href="#" className="link-1">Accueil</a>
               <a href="#" >Catalogue</a>
-              <a href="#"> A propos</a>
-              <a href="#">Faq</a> 
-              <a href="#">Contact</a>
+              <a href="#">Connexion</a> {/* FIXME: */}
             </p>
     
-            <p class="footer-company-name" style={{ color:'#92999f'}}>Powred by BS Partage. Copyright © 2021.</p>
+            <p className="footer-company-name" style={{ color:'#92999f'}}>Powred by BS Partage. Copyright © 2021.</p>
           </div>
           
-          <div class="footer-center">
+          <div className="footer-center">
           <Grid container>
             <Grid item xs={2}>
               <span style={{ padding:'13px 8px 3px 8px', background:'#4A4E69', borderRadius:2}}>
@@ -36,7 +54,7 @@ export default function Footer() {
               </span>
             </Grid>
             <Grid item xs={10} style={{ marginTop:15, textAlign:'start'}}>
-              <p style={{ marginLeft:5 }}>+216 71 961 457</p>
+              <p style={{ marginLeft:5 }}>22 550 675</p>
             </Grid>
            </Grid>
           <Grid container style={{ marginTop:15}}>
@@ -46,7 +64,7 @@ export default function Footer() {
             </span>
             </Grid>
             <Grid item xs={10} style={{ marginTop:15, textAlign:'start'}}>
-              <p style={{ marginLeft:5 }}>support@company.com</p>
+              <p style={{ marginLeft:5 }}>najehdinari@gmail.com</p>
             </Grid>
            </Grid>
           <Grid container style={{ marginTop:15}}>
@@ -56,29 +74,38 @@ export default function Footer() {
               </span>
             </Grid>
             <Grid item xs={10} style={{ marginTop:15}}>
-            <p style={{ marginLeft:5 }}>Tunis Angle avenue principale,</p>
-            <p style={{ marginLeft:5 }}>Rue lac Mälaren,les berges du lac</p>
+            <Link color="inherit" href="https://www.google.com/maps/place/Dinari+green+life/@34.4311398,8.7756556,15z/data=!4m5!3m4!1s0x0:0xeabd5e6cd48f9c33!8m2!3d34.4311398!4d8.7756556">
+              <p style={{ marginLeft:5 }}> Lajama, Gafsa 2100</p>
+              <p style={{ marginLeft:5 }}>Avenue Salah Din Ayoubi</p>
+            </Link>
             </Grid>
            </Grid>
           </div>
     
-          <div class="footer-right">
+          <div className="footer-right">
     
-            <p class="footer-company-about">
+            <p className="footer-company-about">
               <span>A propos de nous</span>
-              Fondée en 2021, la société Campany name est le pionnier tunisien dans le domaine des portes de sécurité. Elle réalise des produits toujours innovants du point de vue technologique.
+              Nous ne sommes pas les seuls, mais nous avons les meilleurs rapports qualité prix dans la fabrication des portes et des menuiseries.<br/>
+              La société Dinari green life, fondée en 2009 vous offre une vaste gamme des portes par des design modernes et de couleurs tendance.
             </p>
     
-            <div class="footer-icons">
-            <span>
-            <FontAwesomeIcon icon={faFacebookF}/>
-            </span>
-            <span>
-              <FontAwesomeIcon icon={faGoogle}/>
-            </span>
-            <span>
-              <FontAwesomeIcon icon={faYoutube}/>
-            </span>
+            <div className="footer-icons">
+            <Link target="_blank" rel="noreferrer" color="inherit" href="https://www.facebook.com/dinari.green/">
+              <span>
+                 <FontAwesomeIcon icon={faFacebookF}  className="icon"/>
+              </span>
+            </Link>
+            <Link color="inherit" target="_blank" rel="noreferrer" href="https://www.google.com/maps/place/Dinari+green+life/@34.4311398,8.7756556,15z/data=!4m5!3m4!1s0x0:0xeabd5e6cd48f9c33!8m2!3d34.4311398!4d8.7756556">
+              <span>
+                <FontAwesomeIcon icon={faGoogle} className="icon"/>
+              </span>
+            </Link>
+            <Link color="inherit" target="_blank" rel="noreferrer" href="https://www.youtube.com/channel/UCt1IIo_U9Hc11kBEY6OxMVw/">
+              <span>
+                <FontAwesomeIcon icon={faYoutube}  className="icon"/>
+              </span>
+            </Link>
             </div>
           </div>
         </footer>

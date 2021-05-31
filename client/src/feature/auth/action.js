@@ -8,10 +8,8 @@ import {
     REDIRECT_USER_TO_AUTH,
     ADD_USER_DETAILS,
     SEND_ACTIVATION_TOKEN,
-    GET_ACTIVATE_EMAIL,
-    GET_FORGOT_PWD_TOKEN,
-    SEND_NEW_PASSWORD,
-    RESET_PWD_SUCCESS
+    SHOW_RESET_PWD_MESSAGE,
+    SHOW_ACTIVATE_MESSAGE,
   } from './types';
   import axios from 'axios';
   import jwtDecode from 'jwt-decode';
@@ -27,7 +25,6 @@ import {
         dispatch({ type: CLEAR_ERRORS });
       })
       .catch(err =>
-        // console.log(err.response.data)
         dispatch({
           type: SET_ERRORS,
           payload: err.response.data
@@ -40,9 +37,7 @@ import {
     axios
       .post("/users/signup", userData)
       .then(res => { 
-        dispatch({ type: GET_ACTIVATE_EMAIL });
-        // setAuthorizationHeader(res.data.token);
-        // dispatch(getUserData());
+        dispatch({ type: SHOW_ACTIVATE_MESSAGE });
         dispatch({ type: CLEAR_ERRORS });
       })
       .catch(err =>
@@ -148,7 +143,7 @@ import {
     axios
     .post('/users/forgot-password', email)
     .then(res => { 
-      dispatch({ type: GET_FORGOT_PWD_TOKEN });
+      dispatch({ type: SHOW_RESET_PWD_MESSAGE });
       dispatch({ type: CLEAR_ERRORS });
     })
     .catch(err =>
@@ -160,7 +155,7 @@ import {
   }
 
   export const resetPassword = (newPasswordData) => (dispatch) => {
-    dispatch({ type: SEND_NEW_PASSWORD });
+    dispatch({ type: LOADING });
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `${newPasswordData.resetLink}`
@@ -170,16 +165,15 @@ import {
       headers: headers
     })
     .then(res => { 
-      dispatch({ type: RESET_PWD_SUCCESS });
-      // setAuthorizationHeader(res.data.token);
-      // dispatch(getUserData());
-      // dispatch({ type: SET_AUTHENTICATED });
-      dispatch({ type: CLEAR_ERRORS });
+        setAuthorizationHeader(res.data.token);
+        dispatch(getUserData());
+        dispatch({ type: SET_AUTHENTICATED });
+        dispatch({ type: CLEAR_ERRORS });
     })
     .catch(err =>
       dispatch({
         type: SET_ERRORS,
-        payload: err.err.response.data
+        payload: err.response.data
       })
     );
   }

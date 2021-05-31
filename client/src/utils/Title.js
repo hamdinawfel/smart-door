@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import logo from '../utils/navbar/assets/logo.jpg'
 const useStyles = makeStyles((theme) => ({
   root:{
     margin:'50px 100px',
@@ -11,27 +12,35 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
         textAlign:'center',
-        fontSize:'28px',
+        fontSize:'30px',
         fontWeight:900,
-        color:'#22223b'
+        color: theme.palette.primary.main
     },
   leftBorder: {
         width:100,
         height:2,
-        background: `linear-gradient(284deg, rgba(34, 34, 59,1) 0%, rgba(34, 34, 59, 0.1) 100%)`,
-        marginTop:7
+        background: `linear-gradient(284deg, rgba(232, 36, 48,1) 0%, rgba(232, 36, 48, 0.1) 100%)`,
+        marginTop:14
       },
   rightBorder: {
         width:100,
         height:2,
-        background: `linear-gradient(90deg, rgba(34, 34, 59,1) 0%, rgba(34, 34, 59, 0.1) 100%)`,
-        marginTop:7
+        background: `linear-gradient(90deg, rgba(232, 36, 48,1) 0%, rgba(232, 36, 48, 0.1) 100%)`,
+        marginTop:14
       },
  shape: {
-     width:15,
-     height:15,
-     background:'rgba(34, 34, 59,1)',
+     width:30,
+     height:30,
+     background:theme.palette.primary.main,
      transform: 'rotate(45deg)'
+      },
+ icon: {
+    color:'#fff',
+    textAlign:'center',
+    marginTop:3,
+    fontSize:15,
+    fontWeight:600,
+     transform: 'rotate(-35deg)'
       }
   }));
 export default function Title({title}) {
@@ -42,7 +51,9 @@ export default function Title({title}) {
           <h2 className={classes.title}>{title}</h2>
           <Grid contaiter style={{ display:'flex', justifyContent:'center', marginTop:5 }}>
             <Grid item className={classes.leftBorder}/>
-            <Grid item  className={classes.shape}/>
+            <Grid item  className={classes.shape}>
+              <p className={classes.icon}>D</p>
+            </Grid>
             <Grid item className={classes.rightBorder}/>
           </Grid>
         </div>

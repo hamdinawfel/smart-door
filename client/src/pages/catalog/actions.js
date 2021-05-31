@@ -6,6 +6,8 @@ import {
   LOADING_PRODUCTS,
   GET_PRODUCTS,
   GET_CATALOG,
+  LOADING_SEARCH,
+  GET_SEARCH,
   SET_ERROR
     } from './types';
 import axios from 'axios';
@@ -65,6 +67,21 @@ export const getCatalog = (tag) => (dispatch) => {
       .then((res) => {
         dispatch({
           type: GET_CATALOG,
+          payload: res.data
+        });
+      })
+      .catch((err) => {
+        dispatch({ type: SET_ERROR  });
+  });
+}
+//SEARCH
+export const search = (searchText) => (dispatch) => {
+  dispatch({ type: LOADING_SEARCH });
+    axios
+    .get(`catalog/search?keyword=${searchText}`)
+      .then((res) => {
+        dispatch({
+          type: GET_SEARCH,
           payload: res.data
         });
       })

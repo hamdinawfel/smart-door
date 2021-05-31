@@ -94,7 +94,7 @@ export default function CustomerRating() {
     return (
         
         <Grid style={{ margin:'100px auto'}}>
-        <Title title="Nos clients parlent" />
+        <Title title="Témoignage" />
         <Grid container style={{marginTop:40}}>
             {services.map(item => <Item 
             key={item.id} 

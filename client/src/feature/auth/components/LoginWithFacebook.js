@@ -19,7 +19,7 @@ function LoginWithFacebook(props) {
         <FacebookLogin
         textButton={""}
         cssClass="btnFacebook"
-        icon={<FontAwesomeIcon icon={faFacebookF} style={{color: '#57AAB4'}}/> }
+        icon={<FontAwesomeIcon icon={faFacebookF} style={{color: 'rgba(255,255,255,0.8)'}}/> }
         appId={process.env.REACT_APP_FACEBOOK_APP_ID}
         // autoLoad={true}
         // reauthenticate={true}

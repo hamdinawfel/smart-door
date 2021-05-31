@@ -7,6 +7,9 @@ export const GET_SUBCATEGORIES= 'GET_SUBCATEGORIES';
 export const LOADING_PRODUCTS= 'LOADING_PRODUCTS';
 export const GET_PRODUCTS= 'GET_PRODUCTS';
 
+export const LOADING_SEARCH= 'LOADING_SEARCH';
+export const GET_SEARCH= 'GET_SEARCH';
+
 export const GET_CATALOG= 'GET_CATALOG';
 
 export const SET_ERROR= 'SET_ERROR';

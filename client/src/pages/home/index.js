@@ -65,7 +65,7 @@ export default function Index(props) {
         <div className={classes.hero}>
         <Slider />
         </div>
-        <Title title="Nos Catalogue"/>
+        <Title title="Show Room"/>
         {/* <BestSelling /> */}
         <Card />
         <Testimonial />

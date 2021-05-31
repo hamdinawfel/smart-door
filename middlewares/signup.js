@@ -6,7 +6,6 @@ module.exports = function validateSignupInput(data) {
   data.name = !isEmpty(data.name) ? data.name : "";
   data.email = !isEmpty(data.email) ? data.email : "";
   data.password = !isEmpty(data.password) ? data.password : "";
-  data.password2 = !isEmpty(data.password2) ? data.password2 : "";
 // Name checks
   if (Validator.isEmpty(data.name)) {
     errors.name = "Veuillez remplir ce champ";
@@ -21,15 +20,10 @@ module.exports = function validateSignupInput(data) {
   if (Validator.isEmpty(data.password)) {
     errors.password = "Veuillez remplir ce champ";
   }
-if (Validator.isEmpty(data.password2)) {
-    errors.password2 = "Veuillez remplir ce champ";
-  }
 if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
-    errors.password = "Le mot de passe doit être au moins de 6 caractères";
+    errors.password = "Weak Password";
   }
-if (!Validator.equals(data.password, data.password2)) {
-    errors.password2 = "Veuillez vérifier votre mot de passe";
-  }
+
 return {
     errors,
     isValid: isEmpty(errors)

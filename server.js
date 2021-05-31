@@ -40,6 +40,8 @@ console.log(`DB Connection Error: ${err.message}`);
 app.use(cors())
 // upload file middlware -folder
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
+
+
 // cors middleware
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*',);

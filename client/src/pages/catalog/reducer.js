@@ -6,6 +6,8 @@ import {
   LOADING_PRODUCTS,
   GET_PRODUCTS,
   GET_CATALOG,
+  LOADING_SEARCH,
+  GET_SEARCH,
   SET_ERROR
 } from './types';
     
@@ -19,6 +21,9 @@ import {
     //PRODUCTS
     loadingProducts: false,
     products: [],
+    //SEARCH
+    loadingSearch: false,
+    searchData: [],
     //ERROR
     error:false
   };
@@ -67,6 +72,18 @@ import {
               ...state,
               products: action.payload,
               loadingProducts: false
+            };
+              //SEARCH SETUP
+          case LOADING_SEARCH:
+            return {
+              ...state,
+              loadingSearch: true
+            };
+          case GET_SEARCH:
+            return{
+              ...state,
+              searchData: action.payload,
+              loadingSearch: false
             };
           // ERROR
           case SET_ERROR:

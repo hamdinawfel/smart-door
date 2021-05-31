@@ -14,11 +14,8 @@ import Catalog from './pages/catalog/index';
 import Error from './pages/error/index';
 
 // import Cart from './pages/cart/index';
-import Signup from './feature/auth/Signup';
 import Activate from './feature/auth/Activate';
-import ForgotPwd from './feature/auth/ForgotPwd';
 import ResetPwd from './feature/auth/ResetPwd';
-import Login from './feature/auth/Login';
 import Auth from './feature/auth/Auth';
 //utils
 // import PrivateRoute from './utils/PrivateRoute'
@@ -52,25 +49,21 @@ function App() {
       <ThemeProvider theme={theme}>
             <Router>
               <ScrollToTop />
-              {/* <Navbar /> */}
               <div > 
                 <Switch>
                   <Route exact path="/" component={ Home } />
-                  {/* <Route exact path="/signup" component={ Signup } /> */}
-                  {/* <Route exact path="/activate/:token" component={ Activate } /> */}
-                  {/* <Route exact path="/forgot-password" component={ ForgotPwd } /> */}
-                  {/* <Route exact path="/reset-password/:resetLink" component={ ResetPwd } /> */}
-                  {/* <Route exact path="/login" component={ Login } /> */}
-                  <Route exact path="/auth" component={ Auth } />
+                  <Route exact path="/activate/:token" component={ Activate } />
+                  <Route exact path="/reset-password/:resetLink" component={ ResetPwd } />
+                  <Route exact path="/connextion" component={ Auth } />
                   <Route  path="/catalog/:category" component={ Catalog } />
                   {/* <Route  path="/catalog" component={ Catalog } /> */}
                   {/* <Route exact path="/cart" component={ Cart } />
                   <Route exact path="/collecte" component={ Collecte } />
                   <PrivateRoute exact path="/checkout" component={ Checkout } /> */}
-                  <Route exact path="/error" component={ Error } /> 
+                  {/* <Route exact path="/error" component={ Error } />  */}
                 </Switch>
               </div>
-          <Footer />
+          {/* <Footer /> */}
           </Router>
       </ThemeProvider>
      </Provider>
@@ -80,12 +73,13 @@ function App() {
 const theme = createMuiTheme({
   palette: {
      primary: {
-      main: '#22223b',
-      dark: '#5b4b48',
+      main: '#E82430', // rgb(232, 36, 48)
+      dark: '#5b4b48', 
       light: '#f2e9e4',
       bleu:'#4a4e69',
       beige:'#c9ada7',
-      orange:'#CA2D36'
+      orange:'#CA2D36',
+      white:'#EBEAF0'
     },
     secondary: {
       main: '#FAE3E3',

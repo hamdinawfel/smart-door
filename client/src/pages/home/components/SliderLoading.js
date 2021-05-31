@@ -42,8 +42,8 @@ SwiperCore.use([EffectCoverflow,Pagination, Navigation, Parallax]);
   <div className="swiper-slide" style={{ backgroundImage:"url(https://secureservercdn.net/192.169.223.13/dvx.d21.myftpupload.com/wp-content/uploads/2020/10/g1.jpg?time=1620830896)"}}>
       <img src="https://secureservercdn.net/192.169.223.13/dvx.d21.myftpupload.com/wp-content/uploads/2020/10/g1.jpg?time=1620830896" className="entity-img" />
       <div className="content">
-        <p className="title" data-swiper-parallax="-30%"  data-swiper-parallax-scale=".7">POTRTES DE HAUTE Qualité</p>
-        <span className="caption" data-swiper-parallax="-20%">Some short description.</span>
+        <p className="title">POTRTES DE HAUTE Qualité</p>
+        <span className="caption">Some short description.</span>
       </div>
     </div>
    </SwiperSlide>)}

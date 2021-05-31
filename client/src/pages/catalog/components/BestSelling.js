@@ -36,34 +36,20 @@ const useStyles = makeStyles((theme) => ({
     },
  },
  myButton:{
-    textTransform:'capitalize',
-    width: 200,
-    padding: '10px 30px',
-    
-    cursor: 'pointer',
-    display: 'block',
-    margin: '0',
-    background:theme.palette.primary.main,
-    color: '#fff',
-    border:0,
-    outline: 'none',
-    borderRadius:' 30px', 
-    position: 'relative',
-    zIndex: 5,
-    boxSizing: 'border-box',   
-    fontWeight: 600,
-    fontSize:'15px', 
-    border:`2px solid ${theme.palette.primary.main}`,
-    transition: '0.5s',
-    '&:hover': {
-        background: '#fff',
-        color: theme.palette.primary.main,
-        border:`2px solid ${theme.palette.primary.main}`
-        // boxShadow: '0 0 5px #57AAB4,  0 0 25px #57AAB4,  0 0 50px #57AAB4, 0 0 100px #03e9f4',
-      },
-      [theme.breakpoints.down('sm')]: {
-        padding:'10px',
-      },
+  color: '#fff',
+  marginTop:15,
+  borderRadius:0,
+  backgroundColor: theme.palette.primary.main,
+   letterSpacing:0.8,
+   textTransform:'capitalize',
+  transition: '0.5s',
+  '&:hover': {
+   backgroundColor: '#fff',
+   color: theme.palette.primary.main
+  },
+  // [theme.breakpoints.down('xs')]: {
+  //   marginTop:10,
+  // },
 },
 }));
 

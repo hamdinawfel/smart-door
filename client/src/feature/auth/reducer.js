@@ -5,20 +5,18 @@ import {
     GET_USER,
     SET_ERRORS,
     CLEAR_ERRORS,
-    GET_ACTIVATE_EMAIL,
-    GET_FORGOT_PWD_TOKEN,
-    SEND_NEW_PASSWORD,
-    RESET_PWD_SUCCESS
+    SHOW_ACTIVATE_MESSAGE,
+    SHOW_RESET_PWD_MESSAGE,
   } from './types';
   
   const initialState = {
     authenticated: false,
     loading: false,
-    activatedStep:false,
-    showForgotPwdMsg : false,
-    resetPwdSuccess:false,
+    showActivateMsg:false,
+    showResetPwdMsg:false,
     user:{},
     errors:{},
+    redirectPath:'/'
   };
   
   export default function(state = initialState, action) {
@@ -36,42 +34,30 @@ import {
           ...state,
           user:action.payload.user,
           loading: false,
-          
         };
       case LOADING:
         return {
           ...state,
           loading: true
         };
-      case GET_ACTIVATE_EMAIL:
+      case SHOW_ACTIVATE_MESSAGE:
         return {
           ...state,
-          activatedStep: true,
+          showActivateMsg: true,
           loading: false
         };
-      case GET_FORGOT_PWD_TOKEN:
+      case SHOW_RESET_PWD_MESSAGE:
         return {
           ...state,
-          showForgotPwdMsg: true,
-          loading: false
-        };
-      case SEND_NEW_PASSWORD:
-        return {
-          ...state,
-          loading: true
-        };
-      case RESET_PWD_SUCCESS:
-        return {
-          ...state,
-          resetPwdSuccess:true,
+          showResetPwdMsg: true,
           loading: false
         };
         case SET_ERRORS:
         return {
           ...state,
           loading: false,
-          activatedStep:false,
-          showForgotPwdMsg : false,
+          showActivateMsg:false,
+          showResetPwdMsg : false,
           errors: action.payload
         };
       case CLEAR_ERRORS:

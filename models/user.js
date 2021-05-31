@@ -14,19 +14,15 @@ const userSchema = new Schema({
   password: {
     type: String,
     required:true
-    },
-    admin:   {
-      type: Boolean,
-      default: false
   },
-    balance: {
-    type: Number,
-    default: 0.00,
-    },
-    resetLink: {
-    type: String,
-    default: '',
-    },
+  admin:   {
+    type: Boolean,
+    default: false
+  },
+  resetLink: {
+  type: String,
+  default: '',
+  },
   }, {
   timestamps: true
 });

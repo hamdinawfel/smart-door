@@ -9,13 +9,6 @@ import { connect } from 'react-redux';
 import { authUser } from '../action';
 const useStyles = makeStyles((theme) => ({
     loginButton: {
-      // margin:'10px 0',
-      // width: '300px',
-      // [theme.breakpoints.down('sm')]: {
-      //    width: '260px',
-      //     },
-      // height:'50px',
-      // borderRadius: '4px',
       background: '#000',
       color:'#fff',
       border:'0px transparent',
@@ -36,9 +29,8 @@ function LoginWithGoogle(props) {
     return (
          <GoogleLogin
             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-            // className="btnGoogle"
             render={renderProps => (
-              <FontAwesomeIcon icon={faGoogle}  onClick={renderProps.onClick} style={{color: '#57AAB4', fontSize:28}}/>
+              <FontAwesomeIcon icon={faGoogle}  onClick={renderProps.onClick} style={{ color: 'rgba(255,255,255,0.8)', fontSize:28}}/>
             )}
             buttonText=""
             onSuccess={responseGoogle}

@@ -11,8 +11,8 @@ import "swiper/components/pagination/pagination.min.css"
 import "swiper/components/navigation/navigation.min.css"
 //M-UI
 import { makeStyles } from '@material-ui/core/styles';
-//utils
-import Mybutton from '../../../utils/Mybutton'
+import Button from '@material-ui/core/Button';
+
 //redux set up
 import SliderLoading from './SliderLoading'
 import { connect } from 'react-redux';
@@ -21,8 +21,24 @@ import { getCategories } from '../../catalog/actions'
 // install Swiper modules
 SwiperCore.use([EffectCoverflow,Pagination, Navigation, Parallax]);
 
+const useStyles = makeStyles((theme) => ({
+ button:{
+    color: '#fff',
+    marginTop:15,
+    backgroundColor: theme.palette.primary.main,
+     letterSpacing:0.8,
+     textTransform:'capitalize',
+    transition: '0.5s',
+    borderRadius:0,
+    '&:hover': {
+     backgroundColor: '#fff',
+     color: theme.palette.primary.main
+    },
+ }
+}));
+
 function Slider(props) {
- 
+  const classes = useStyles();
   useEffect(() => {
     props.getCategories();
   }, []);
@@ -55,11 +71,10 @@ function Slider(props) {
             
             {props.catalog.categories.map(item =><SwiperSlide key={item._id}>
             <div className="swiper-slide"  style={{ backgroundImage:`url(${item.imageUrl})`}}>
-                {/* <img src="https://drive.google.com/uc?export=view&id=0B_koKn2rKOkLWTdaX3J5b1VueDg" alt={item.name} className="entity-img" /> */}
                 <div className="content">
-                  <p className="title" data-swiper-parallax="-30%"  data-swiper-parallax-scale=".7">{item.title}</p>
-                  <span className="caption" data-swiper-parallax="-20%">{item.caption}</span>
-                  <Mybutton content="Découvrir" />
+                  <p className="title">{item.title}</p>
+                  <span className="caption">{item.caption}</span>
+                  <Button className={classes.button}>Découvrir</Button>
                 </div>
               </div>
             </SwiperSlide>)}

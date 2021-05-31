@@ -16,7 +16,21 @@ catalogRouter.route('/')
   .catch((err) => status(500).json(err));
 });
 
-
+catalogRouter.route('/search')
+.get((req,res,next) => {
+    Products.aggregate([
+      {
+        "$search":{
+          "text":{
+            "query":`${req.query.keyword}`,
+            "path":["title","category", "description"]
+          }
+        }
+      }
+  ], function (err, result) {
+    res.json(result);
+  }).allowDiskUse(true)
+});
 
 catalogRouter.route('/:category')
 .get((req,res,next) => {

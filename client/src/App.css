@@ -21,7 +21,7 @@ body{
 	right: 0;
 	width: 200px;
 	height: 2px;
-	background:linear-gradient( to left , transparent,#57AAB4,#57AAB4);
+	background:linear-gradient( to left , transparent,#E82430,#E82430);
 	animation: anim2 2s linear infinite;
 	transform: translateY(-300%);
 	animation-delay: 0.8s;
@@ -31,7 +31,7 @@ body{
 	right: 0;
 	width: 2px;
 	height: 200px;
-	background:linear-gradient( to top , transparent,#57AAB4 ,#57AAB4);
+	background:linear-gradient( to top , transparent,#E82430 ,#E82430);
 	animation: anim1 2s linear infinite;
 	animation-delay: 0s;
 }
@@ -40,7 +40,7 @@ body{
 	bottom: 0;
 	width: 200px;
 	height: 2px;
-	background:linear-gradient( to left , transparent,#57AAB4,#57AAB4);
+	background:linear-gradient( to left , transparent,#E82430,#E82430);
 	animation: anim2 2s linear infinite;
 }
 .sp-l{
@@ -48,7 +48,7 @@ body{
 	top:0;
 	width: 2px;
 	height: 200px;
-	background:linear-gradient( to top , transparent,#57AAB4,#57AAB4);
+	background:linear-gradient( to top , transparent,#E82430,#E82430);
 	animation: anim1 2s linear infinite;
 	animation-delay: 1s;
 	transform: translateX(-300%);
@@ -114,13 +114,14 @@ body{
 
 .footer-distributed h3{
 	color:  #ffffff;
-	font: normal 36px 'Open Sans', cursive;
-	margin: 0;
+	cursor: pointer;
+	font-size: 30px;
+	letter-spacing: 1px;
+	font-weight: 900;
+	margin-left: 10px;
 }
 
-.footer-distributed h3 span{
-	color:  lightseagreen;
-}
+
 
 /* Footer links */
 
@@ -223,7 +224,12 @@ body{
 
 .footer-distributed .footer-icons{
 	margin-top: 25px;
+	
 }
+.footer-distributed .footer-icons .icon:hover {
+	color: rgba(247, 101, 108,1);
+	transition: 0.5s;
+  }
 
 .footer-distributed .footer-icons a{
 	display: inline-block;
@@ -290,28 +296,34 @@ body{
 	width: 40%;
 }
 
-/* The company logo */
 
-.footer-distributed h3{
-	color:  #ffffff;
-	font: normal 36px 'Open Sans', cursive;
-	margin: 0;
+/* The  logo */
+.logo {
+   display: flex;
+}
+.logo h3{
+	color:  #E82430;
+	cursor: pointer;
+	font-size: 30px;
+	letter-spacing: 1px;
+	font-weight: 900;
+	margin-top: 10px;
 }
 
-.footer-distributed h3 span{
-	color:  lightseagreen;
-}
-/* The fake logo */
+@media (max-width: 600px) {
 
-.fake-logo h3{
-	color:  #ffffff;
-	font: normal 28px 'Open Sans', cursive;
-	margin-top: -5px;
+	.logo h3{
+	font-size: 28px;
+	font-weight: 600;
+	letter-spacing: normal;
+		
+	}
+
+	
+
 }
 
-.fake-logo h3 span{
-	color:  #31A8FF;
-}
+/* end logo */
 
 /* Footer links */
 
