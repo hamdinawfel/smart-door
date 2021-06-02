@@ -427,5 +427,35 @@ router.get('/admin/:userId', authenticate.verifyUser,(req,res) => {
    })
 })
  
+router.get('/',authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next) => { //FIXME: Add pagination
+    User.find({})
+    .then((users) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(users);
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
 
+
+router.put('/:userId', authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
+  User.findByIdAndUpdate(req.params.userId, {
+    $set: req.body
+}, { new: true })
+.then((user) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(user);
+}, (err) => next(err))
+.catch((err) => next(err));
+})
+router.delete('/:userId', authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
+  User.findByIdAndRemove(req.params.userId)
+  .then((resp) => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(resp);
+  }, (err) => next(err))
+  .catch((err) => next(err));  
+});
   module.exports = router;

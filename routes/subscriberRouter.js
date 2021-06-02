@@ -1,14 +1,16 @@
 require('dotenv').config()
 const express = require('express');
 const Subscribers = require('../models/subscribers');
+var authenticate = require('../middlewares/authenticate');
+
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 
 const subscriberRouter = express.Router();
 
 
 subscriberRouter.route('/') 
-.get( (req,res,next) => { //FIXME: only the admin can access the resourse
-    // Products.find({}).sort( { "category": -1 , "_id": 1} ).skip(req.query.page > 0 ? ( ( req.query.page - 1 ) * 12 ) : 0).limit(12)
+.get(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next) => { //FIXME: Add pagination
     Subscribers.find({})
     .then((subscribers) => {
         res.statusCode = 200;
@@ -21,12 +23,6 @@ subscriberRouter.route('/')
     Subscribers.findOne({email: req.body.email})
     .then((subscriber) => {
         if (!subscriber) {
-            
-              const output = `
-              <p>Bienvenue à MamoGamers</p>
-              <h3>Merci de votre abonnement</h3>
-              <h3>test for emailing feature after subscribe</h3>
-            `;
             let transporter = nodemailer.createTransport({
               service: 'gmail',
               auth: {
@@ -36,13 +32,28 @@ subscriberRouter.route('/')
                 rejectUnauthorized: false
               }
             });
-    
+            const handlebarOptions = {
+              viewEngine: {
+                  extName: ".hbs",
+                  partialsDir: './emails',
+                  defaultLayout: false,
+              },
+              viewPath: './emails',
+              extName: ".hbs",
+          };
+          
+          transporter.use('compile', hbs(handlebarOptions));
             let mailOptions = {
               from:`${process.env.NODEMAILAR_USER}`, 
               to:  req.body.email, 
-              subject: 'Bienvenue à MamoGamers',
-              text: 'Bienvenue à MamoGamers',
-              html: output 
+              subject: 'Inscription à notre la Newsletter réussit',
+              text: 'Welcome to Dinari Green Life',
+              template: 'subscribe',
+              attachments: [{
+                filename: 'logo.jpg',
+                  path:'./uploads/logo.jpg',
+                cid: 'logo'
+                }], 
           };
           
             Subscribers.create(req.body)
@@ -67,13 +78,36 @@ subscriberRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put((req, res, next) => {
+.put(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /subscribe');
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
     res.statusCode = 403;
     res.end('DELETE operation not supported on /subscribe');   
+});
+
+subscriberRouter.route('/:userId') 
+.get(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next) => { //FIXME: Add pagination
+  res.statusCode = 403;
+  res.end('GET operation not supported on /subscribe' + req.params.userId);  
+})
+.post(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
+  res.statusCode = 403;
+  res.end('POST operation not supported on /subscribe' + req.params.userId);  
+})
+.put(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /subscribe' + req.params.userId);
+})
+.delete((req, res, next) => {
+  Subscribers.findByIdAndRemove(req.params.userId)
+  .then((resp) => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(resp);
+  }, (err) => next(err))
+  .catch((err) => next(err));  
 });
 
 

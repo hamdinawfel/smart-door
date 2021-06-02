@@ -18,7 +18,10 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
-    tags:[String],
+    subCategory: {
+        type: String,
+        required: true
+    },
     stock: {
         type: Number,
         required: true,
@@ -31,6 +34,10 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
+    showcase: {
+        type: Boolean,
+        default: false, // for redering product on the landing page 
+    }
 }, {
     timestamps: true
 });
