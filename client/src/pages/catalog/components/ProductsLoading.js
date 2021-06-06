@@ -49,8 +49,8 @@ export default function ProductsLoading() {
                     <Skeleton 
                         key={item} 
                         variant="rect"
-                        width={240} 
-                        height={300}
+                        width={380} 
+                        height={350}
                         style={{borderRadius:19, margin:10}}/>
                 </Grid>
             )}
@@ -61,8 +61,8 @@ export default function ProductsLoading() {
                 <Skeleton 
                     key={item} 
                     variant="rect"
-                    width={240} 
-                    height={300}
+                    width={380} 
+                    height={350}
                     style={{borderRadius:19, margin:10}}/>
             </Grid>
             )}
@@ -73,20 +73,20 @@ export default function ProductsLoading() {
                 <Skeleton 
                     key={item} 
                     variant="rect"
-                    width={240} 
-                    height={300}
+                    width={380} 
+                    height={350}
                     style={{borderRadius:19, margin:10}}/>
             </Grid>
             )}
          </Grid> 
         <Grid container  style={{ display:'flex', justifyContent:'center', alignItems:'center', margin:'0 auto'}}>
-            {[0,1,2,3,4,5,6,7].map(item =>
-            <Grid item lg={3} className={classes.lg}>
+            {[0,1,2,3,4,5].map(item =>
+            <Grid item lg={4} className={classes.lg}>
                 <Skeleton 
                     key={item} 
                     variant="rect"
-                    width={240} 
-                    height={300}
+                    width={380} 
+                    height={350}
                     style={{borderRadius:19, margin:10}}/>
             </Grid>
             )}

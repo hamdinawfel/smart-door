@@ -1,0 +1,5 @@
+export const SECCESS_SUBMIT = 'SECCESS_SUBMIT';
+export const SET_ERROR = 'SET_ERROR';
+export const LOADING = 'LOADING';
+export const GET_LOCATIONS = 'GET_LOCATIONS';
+export const LOADING_LOCATIONS = 'LOADING_LOCATIONS';

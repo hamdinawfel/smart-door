@@ -1,4 +1,5 @@
-import React , { useEffect }from 'react'
+import React from 'react'
+import { useHistory } from "react-router-dom";
 //Mui
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -12,7 +13,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 
 //Redux
 import { connect } from 'react-redux';
-import { getCategories, getCatalog } from '../../../pages/catalog/actions';
+import { getBySubCategory } from '../../../pages/catalog/actions';
 const useStyles = makeStyles((theme) => ({
     root: {
         height:65,
@@ -110,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown} className={classes.menuList}>
                       {props.subCategories.map(item =><React.Fragment>
-                        <MenuItem key={item} onClick={(e) => { props.handleFilterBySubCategorie(item); handleClose(e);}}>{item}</MenuItem>
+                        <MenuItem key={item} onClick={(e) => { props.handleFilterBySubCategory(props.name, item); handleClose(e);}}>{item}</MenuItem>
                         {item !== props.subCategories[props.subCategories.length-1] ?<Divider style={{ background:"#fff"}}/>:null}
                       </React.Fragment>)}
                     </MenuList>
@@ -126,13 +127,16 @@ const useStyles = makeStyles((theme) => ({
   }
 function Category(props) {
   const classes = useStyles();
-   useEffect(() => {
-     props.getCategories()
-   }, []);
+  let history = useHistory();
 
-   const handleFilterBySubCategorie = (tag) =>{
-    props.getCatalog(tag)
-  }
+  const handleFilterBySubCategory = (category, subCategory) =>{
+    if(history.location.pathname.includes('/catalog/')){
+     props.getBySubCategory(subCategory)
+    }else{
+      let url = `/catalog/${category.replace(/ /g, '-')}?subcategory=${subCategory.replace(/ /g, '-')}`
+      history.push(url)
+    }
+ }
     return (
         <div className={classes.root}>
            {props.catalog.loadingCategories?
@@ -144,7 +148,7 @@ function Category(props) {
                   key={item._id}
                   name={item.name} 
                   subCategories={item.subCategories}
-                  handleFilterBySubCategorie={handleFilterBySubCategorie}/>)}
+                  handleFilterBySubCategory={handleFilterBySubCategory}/>)}
           </React.Fragment>}
         </div>
     )
@@ -153,8 +157,7 @@ const mapStateToProps = (state) => ({
     catalog: state.catalog,
   });
   const mapActionsToProps =   {
-    getCategories,
-    getCatalog
+    getBySubCategory
    };
   export default connect(
     mapStateToProps,

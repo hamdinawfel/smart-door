@@ -1,13 +1,10 @@
 import {
   LOADING_CATEGORIES,
   GET_CATEGORIES,
-  LOADING_SUBCATEGORIES,
-  GET_SUBCATEGORIES,
   LOADING_PRODUCTS,
-  GET_PRODUCTS,
-  GET_CATALOG,
-  LOADING_SEARCH,
-  GET_SEARCH,
+  GET_SHOWCASE,
+  GET_BY_CATEGORY,
+  GET_BY_SUB_CATEGORY,
   SET_ERROR
 } from './types';
     
@@ -15,15 +12,9 @@ import {
     //CATEGORY 
     loadingCategories: false,
     categories: [],
-    //SUBCATEGORY 
-    loadingSubCategories: false,
-    subCategories: [],
     //PRODUCTS
     loadingProducts: false,
     products: [],
-    //SEARCH
-    loadingSearch: false,
-    searchData: [],
     //ERROR
     error:false
   };
@@ -42,48 +33,30 @@ import {
             categories: action.payload,
             loadingCategories: false
           };
-          //SUBCATEGORY SETUP
-          case LOADING_SUBCATEGORIES:
-            return {
-              ...state,
-              loadingSubCategories: true
-            };
-          case GET_SUBCATEGORIES:
-            return{
-              ...state,
-              categoriesData: action.payload,
-              subCategories: false
-            };
           //PRODUCTS SETUP
           case LOADING_PRODUCTS:
             return {
               ...state,
               loadingProducts: true
             };
-          case GET_PRODUCTS:
+          //showrrom SETUP
+          case GET_SHOWCASE:
             return{
               ...state,
               products: action.payload,
               loadingProducts: false
             };
-          //FILTER SETUP
-          case GET_CATALOG:
+          case GET_BY_CATEGORY:
             return{
               ...state,
               products: action.payload,
               loadingProducts: false
             };
-              //SEARCH SETUP
-          case LOADING_SEARCH:
-            return {
-              ...state,
-              loadingSearch: true
-            };
-          case GET_SEARCH:
+          case GET_BY_SUB_CATEGORY:
             return{
               ...state,
-              searchData: action.payload,
-              loadingSearch: false
+              products: action.payload,
+              loadingProducts: false
             };
           // ERROR
           case SET_ERROR:

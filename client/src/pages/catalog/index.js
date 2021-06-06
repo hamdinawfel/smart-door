@@ -1,5 +1,5 @@
 import React, { useEffect }from 'react';
-import { useParams, Redirect } from "react-router-dom";
+import { useParams,useLocation } from "react-router-dom";
 import clsx from 'clsx';
 //M-UI
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -15,7 +15,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Chip from '@material-ui/core/Chip';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
-import Pagination from '@material-ui/lab/Pagination';
 import Collapse from '@material-ui/core/Collapse';
 
 //MUI ICONS
@@ -23,31 +22,37 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
+import DoneIcon from '@material-ui/icons/Done';
 // components
-import Catalog from './components/Catalog'
 import Skeleton from '../home/components/Skeleton'
 //utils
 import Navbar from '../../utils/navbar/index'
+import Footer from '../../utils/footer/index'
 //redux set up
 import { connect } from 'react-redux';
-// import { getProducts, getCountedCategory, getAllByPrice, getByCategory, changePage} from './actions'
-import { getCategories, getCatalog} from './actions'
+import { getCategories, getShowcaseProducts, getByCategory, getBySubCategory} from './actions'
+import Showroom from './components/Showroom';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     backgroundColor:'#FFF',
-    paddingBottom:50
+    paddingBottom:50,
+    [theme.breakpoints.down('sm')]: {
+    },
   },
   appBar: {
     top :140,
     zIndex:1,
+    [theme.breakpoints.down('sm')]: {
+    top :80,
+    },
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -70,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    marginTop:-2,
+    marginTop:2,
     zIndex:0,
     [theme.breakpoints.down('sm')]: {
       display:'none'
@@ -137,30 +142,61 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: theme.spacing(1),
     top: 5,
-    // color: theme.palette.secondary.light,
+  },
+  category:{
+    textTransform:'uppercase',
+    fontSize:20,
+    [theme.breakpoints.down('sm')]: {
+      fontSize:12,
+    },
+  },
+  subCategory:{
+    textTransform:'uppercase',
+    fontSize:18,
+    [theme.breakpoints.down('sm')]: {
+      fontSize:10,
+    },
   }
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-function HomeCatalog(props) {
+
+function Catalog(props) {
   const classes = useStyles();
   const theme = useTheme();
+  let { category } = useParams();
+  let query = useLocation();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
-  // const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-   
   const [open, setOpen] = React.useState(true);
   const [openPhoneFilter, setOpenPhoneFilter] = React.useState(false);
-  const [ activeSort, setActiveSort ] = React.useState('');
-  const [ activeCategory, setActiveCategory ] = React.useState('all');
-//
+  const [ activeCategory, setActiveCategory ] = React.useState('');
+  const [ activeSubCategory, setActiveSubCategory ] = React.useState('');
   const [openCategory, setOpenCategory] = React.useState(false);
   const [expanded, setExpanded] = React.useState('');
 
+  
   useEffect(() => {
-    props.getCategories();
+    if(category === 'showroom'){
+      const sort=-1;
+      const limit =9;
+       props.getShowcaseProducts(sort,limit);
+      setActiveCategory('showroom');
+    }else if(query.search){
+      let subCategory = query.search.split('?subcategory=')[1].replace('-',' ')
+      let categorie = category.replace('-',' ')
+      props.getBySubCategory(subCategory)
+      setActiveCategory(categorie);
+      setActiveSubCategory(subCategory);
+    }else{
+      let categorie = category.replace('-',' ')
+      setActiveCategory(categorie);
+      props.getByCategory(categorie)
+      console.log(categorie)
+    }
   }, []);
 
+  
   const handleClick = (expanded) => {
     setOpenCategory(!openCategory);
     setExpanded(expanded);
@@ -175,49 +211,28 @@ function HomeCatalog(props) {
     setOpen(false);
     setOpenPhoneFilter(false);
   };
-  const handleFilterBySubCategorie = (tag) =>{
-    props.getCatalog(tag)
+  const handleGetShowcaseProducts = ()=>{
+    const sort=1;
+    const limit =18;
+    props.getShowcaseProducts(sort,limit);
+    setOpenPhoneFilter(false);
+    setActiveCategory('SHOWROOM');
+    setActiveSubCategory('');
+  }
+  
+  const handleGetByCategory = (category) =>{
+    props.getByCategory(category)
+    setActiveCategory(category);
+    setActiveSubCategory('');
     setOpenPhoneFilter(false);
   }
-let { category } = useParams();
+  const handleGetBySubCategory = (category, subCategory) =>{
+    props.getBySubCategory(subCategory)
+    setActiveCategory(category);
+    setActiveSubCategory(subCategory);
+    setOpenPhoneFilter(false);
+  }
  
-  // useEffect(() => {
-  //   props.getCountedCategory();
-  //   if(category !== "all"){
-  //     handleCategoryFilter(category)
-  //   }else{
-  //     props.getProducts(props.products.page)
-  //   }
-  // }, []);
- 
-  const handleSortByDescPrice = () =>{
-    const category = activeCategory;
-    props.getAllByPrice(-1, category);
-    setActiveSort('high')
-  }
-  const handleSortByAscPrice = () =>{
-    const category = activeCategory;
-    // props.getAllByPrice(1, category);
-    setActiveSort('low')
-  }
-  // const handleCategoryFilter = (category) =>{
-  //   // props.getByCategory(category)
-  //   setActiveCategory(category);
-  //   setActiveSort('')
-  // }
-  
-  const handleGetProduts = () => {
-    // props.getProducts(0); //FIXME:
-    setActiveCategory('all');
-    setActiveSort('');
-  }
- //PAGINATION
-  const handleChangePage = (event, page) => {
-    window.scrollTo(0, 300);
-    // props.changePage(page);
-    // props.getProducts(page)
-    
-    }
   return (
     <React.Fragment>
       <Navbar />
@@ -228,7 +243,6 @@ let { category } = useParams();
         position="absolute"
         elevation={0}
         color="inherit"
-        // className={classes.catalogNavigation}
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
@@ -241,18 +255,20 @@ let { category } = useParams();
             edge="start"
             className={clsx(classes.menuButton, open && classes.hide)}
           >
-            <ArrowBackIcon />
+            <FilterListIcon />
           </IconButton>
-          {activeCategory ==='all'? 
-            <Typography variant="h6" >
-              All Products
-            </Typography>
-            :
-            <Typography variant="h6" >
-              {activeCategory}
-            </Typography>
-          }
-          {/* <Chip variant="outlined" size="small" label="50" className={classes.chipPhone}/> */}
+          <div style={{display:'flex',alignItems:'center'}}>
+            <Typography variant="h6" className={classes.category}>
+                {activeCategory}
+              </Typography>
+           {activeSubCategory !== ''?
+            <div style={{display:'flex',alignItems:'center'}}>
+              <ChevronRightIcon style={{ verticalAlign:'top'}}/>
+              <Typography variant="h6" className={classes.subCategory}>
+                {activeSubCategory}
+              </Typography>
+            </div>:null}
+          </div>
         </Toolbar>
         <Divider style={{ marginTop: -2}}/>
       </AppBar>
@@ -268,7 +284,7 @@ let { category } = useParams();
       >
         <div className={classes.drawerHeader}>
          <Typography variant="h6">
-           Filter
+            Filtre
           </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
@@ -277,39 +293,37 @@ let { category } = useParams();
         </div>
         <Divider />
           <Typography variant="h6" style={{ margin:'10px 20px'}}>
-             All Categories
+             Toutes les categories
           </Typography>
         <List>
            { props.catalog.loadingCategories?
               <Skeleton />
            :
            <React.Fragment>
-             <ListItem button onClick={()=>handleFilterBySubCategorie('best selling')}>
-                  <ListItemText primary='Best Selling' style={{textTransform:'capitalize'}}/>
+             <ListItem button onClick={handleGetShowcaseProducts}>
+                  <ListItemText primary='SHOWROOM' style={{textTransform:'capitalize'}}/>
               </ListItem>
               {props.catalog.categories.map(item =>
               <div key={item._id}>
-                <ListItem button onClick={()=>handleClick(item._id)}>
-                  <ListItemText primary={item.name} style={{textTransform:'capitalize'}}/>
-                  {openCategory && expanded === item._id? <UnfoldLessIcon className={classes.icon}/> : <UnfoldMoreIcon className={classes.icon} />}
+                <ListItem button >
+                  <ListItemText primary={item.name} style={{textTransform:'capitalize'}} onClick={()=>handleGetByCategory(item.name)}/>
+                  {openCategory && expanded === item._id? <UnfoldLessIcon className={classes.icon} onClick={()=>handleClick(item._id)}/> : <UnfoldMoreIcon className={classes.icon} onClick={()=>handleClick(item._id)}/>}
                 </ListItem>
                 <Collapse in={openCategory && expanded === item._id} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding style={{ backgroundColor:'rgba(0, 0, 0, 0.1)'}}>
-                    {item.subCategories.map(item =>
-                      <ListItem key={item} button style={{textTransform:'capitalize'}} onClick={()=>handleFilterBySubCategorie(item)}>
-                      <ListItemText primary={item}/>
-                    </ListItem>)}
+                  <List component="div" disablePadding>
+                      {item.subCategories.map(element =>
+                      <Chip
+                          key={element}
+                          onClick={()=>handleGetBySubCategory(item.name, element)}
+                          style={{textTransform:'capitalize', margin:'5px', width:'90%'}}
+                          label={element}
+                          onDelete={()=>console.log('')}
+                          deleteIcon={<DoneIcon  style={{ display:element ===activeSubCategory?'flex':'none', float:'right'}}/>}
+                          variant="outlined"
+                        />)}
                   </List>
                 </Collapse>
               </div>)}
-              {/* { props.products.countedCategoryList.length !== 0?
-              <div>
-                 { props.products.countedCategoryList.map((category)=>
-                  <ListItem key={category._id} button onClick={()=>handleCategoryFilter(category._id)}>
-                    <ListItemText primary={category._id} />
-                    <Chip variant="outlined" size="small" label={category.count} className={activeCategory === category._id ?classes.activeCategory:null}/>
-                  </ListItem>) }
-              </div>: null} */}
           </React.Fragment>}
         </List>
       </Drawer>
@@ -320,7 +334,6 @@ let { category } = useParams();
         onClose={handleDrawerClose}
         aria-labelledby="responsive-dialog-title"
       >
-        {/* <DialogTitle id="responsive-dialog-title">{"Estimer votre collecte en 3 click"}</DialogTitle> */}
         <div className={classes.filterHeader}>
          <Typography variant="h6">
           filter
@@ -332,28 +345,35 @@ let { category } = useParams();
         
         <Divider />
         <Typography variant="h6" style={{ margin:'10px 20px'}}>
-           All Categories
+           Toutes les categories
           </Typography>
         <List>
         { props.catalog.loadingCategories?
               <Skeleton />
            :
            <React.Fragment>
-               <ListItem button onClick={()=>handleFilterBySubCategorie('best selling')}>
-                  <ListItemText primary='Best Selling' style={{textTransform:'capitalize'}}/>
+               <ListItem button onClick={handleGetShowcaseProducts}>
+                  <ListItemText primary='SHOWROOM' style={{textTransform:'capitalize'}}/>
               </ListItem>
               {props.catalog.categories.map(item =>
               <div key={item._id}>
-                <ListItem button onClick={()=>handleClick(item._id)}>
-                  <ListItemText primary={item.name} style={{textTransform:'capitalize'}}/>
-                  {openCategory && expanded === item._id? <UnfoldLessIcon className={classes.icon}/> : <UnfoldMoreIcon className={classes.icon} />}
+                <ListItem button >
+                  <ListItemText primary={item.name} style={{textTransform:'capitalize'}} onClick={()=>handleGetByCategory(item.name)}/>
+                  {openCategory && expanded === item._id? <UnfoldLessIcon className={classes.icon} onClick={()=>handleClick(item._id)}/> : <UnfoldMoreIcon className={classes.icon} onClick={()=>handleClick(item._id)}/>}
                 </ListItem>
                 <Collapse in={openCategory && expanded === item._id} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding style={{ backgroundColor:'rgba(0, 0, 0, 0.1)'}}>
-                    {item.subCategories.map(item =>
-                      <ListItem key={item} button onClick={()=>handleFilterBySubCategorie(item)} style={{textTransform:'capitalize'}}>
-                      <ListItemText primary={item}/>
-                    </ListItem>)}
+                  <List component="div" disablePadding>
+                    {item.subCategories.map(element =>
+                      <Chip
+                      key={element}
+                      clickable
+                      onClick={()=>handleGetBySubCategory(item.name, element)}
+                      style={{textTransform:'capitalize', margin:'5px', width:'90%'}}
+                      label={element}
+                      onDelete={()=>console.log('')}
+                      deleteIcon={<DoneIcon  style={{ display:element ===activeSubCategory?'flex':'none', float:'right'}}/>}
+                      variant="outlined"
+                    />)}
                   </List>
                 </Collapse>
               </div>)}
@@ -366,16 +386,10 @@ let { category } = useParams();
         })}
       >
         <div className={classes.drawerHeader} />
-         <Catalog />
-         {/* PAGINATION */}
-         {/* { activeCategory === 'all'?
-          <div  style={{ display:'flex', justifyContent: 'center', textAlign:' center', margin: '50px auto', width:'100%'}}>
-            {props.products.productsCount/12 > 1?<Pagination count={Math.trunc(props.products.productsCount/12)+1} page={props.products.page} onChange={handleChangePage} variant="outlined" color="primary"/>: null}
-          </div>
-          :
-           null } */}
+         <Showroom />
       </main>
     </div>
+    <Footer />
     </React.Fragment>
   );
 }
@@ -386,12 +400,12 @@ const mapStateToProps = (state) => ({
  
  const mapActionsToProps =   {
   getCategories,
-  getCatalog,
-  // getCountedCategory,
-  // changePage
+  getShowcaseProducts,
+  getByCategory,
+  getBySubCategory
  };
  
  export default connect(
    mapStateToProps,
    mapActionsToProps
- )(HomeCatalog);
+ )(Catalog);

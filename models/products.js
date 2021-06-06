@@ -34,6 +34,10 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
+    quantity: {
+        type: Number,
+        default: 0
+    },
     showcase: {
         type: Boolean,
         default: false, // for redering product on the landing page 

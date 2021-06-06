@@ -1,19 +1,19 @@
 import React , { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
 //Mui
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 //Icons
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
@@ -21,14 +21,12 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+//
+import LoadingProducts from '../../catalog/components/ProductsLoading'
 //redux set up
 import { connect } from 'react-redux';
-// import { getProducts, addToCart, subQuantity} from '../actions'
-import p1 from '../assets/p1.jpg'
-import p2 from '../assets/p2.jpg'
-import p3 from '../assets/p3.jpg'
-import p4 from '../assets/p4.jpg'
-import p5 from '../assets/p5.jpg'
+import { getShowcaseProducts } from '../../catalog/actions'
+import { addToCart,  subQuantity, getCart} from '../../cart/actions'
 
 const useStyles = makeStyles((theme) => ({
  root:{
@@ -38,20 +36,6 @@ const useStyles = makeStyles((theme) => ({
     },
     
  },
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
   card: {
     height: '100%',
     margin:'10px 10px',
@@ -73,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius:'25px',
     width:'100%',
+   
     padding:'5px auto',
     [theme.breakpoints.up('md')]: {
       width:'50%',
@@ -87,6 +72,10 @@ const useStyles = makeStyles((theme) => ({
   count:{
     textAlign:'center',
     padding:'0.3rem 0.3rem',
+    fontWeight:900,
+    fontSize:20,
+    opacity:0.6,
+    color:'#000'
   },
   title:{
     fontWeight:600,
@@ -96,6 +85,15 @@ const useStyles = makeStyles((theme) => ({
         color:'#008000'
      },
   },
+  dialogTitle:{
+    fontWeight:600,
+    textTransform:'capitalize',
+    marginBottom:30,
+    [theme.breakpoints.down('sm')]: {
+        textAlign:'center',
+        margin:'30px auto'
+       },
+  },
   price:{
     float:'right',
     fontWeight:600,
@@ -103,6 +101,24 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid #9ef01a`,
     padding: 5,
     borderRadius:'5px',
+  },
+  dialogPrice:{
+    fontWeight:600,
+    color: '#008000',
+    border: `1px solid #9ef01a`,
+    padding: 5,
+    borderRadius:'5px',
+    [theme.breakpoints.down('sm')]: {
+       align:'center'
+      },
+  },
+  dialogPriceContainer:{
+      display:'flex',
+    justifyContent:'left',
+    [theme.breakpoints.down('sm')]: {
+      display:'flex',
+        justifyContent:'center',
+      },
   },
   link: {
     margin: 10,
@@ -115,6 +131,25 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       margin:'5px',
     },
+  },
+  dialogContainer:{
+      margin:'50px 0',
+  },
+  dialogIconsContainer:{
+    display:'flex',
+    justifyContent:'space-around',
+    marginTop:'30px',
+    [theme.breakpoints.down('sm')]: {
+        display:'block'
+      },
+  },
+  dialogBtnContainer:{
+   display:'flex',
+   justifyContent:'space-between',
+   padding:'0 24px',
+    [theme.breakpoints.down('sm')]: {
+        padding:'0px',
+      },
   },
   myButton:{
     color: '#fff',
@@ -135,75 +170,26 @@ const useStyles = makeStyles((theme) => ({
 },
 }));
 
-const data = [
-    {    "_id":"1",
-        "title":"PRODI",
-        "imageUrl":p1,
-        "sellPrice":"500"
-    },
-    {    "_id":"2",
-        "title":"PRODI",
-        "imageUrl":p2,
-        "sellPrice":"800"
-    },
-    {    "_id":"3",
-        "title":"PRODI",
-        "imageUrl":p3,
-        "sellPrice":"750"
-    },
-    {    "_id":"4",
-        "title":"PRODI",
-        "imageUrl":p4,
-        "sellPrice":"900"
-    },
-    {    "_id":"5",
-        "title":"PRODI",
-        "imageUrl":p5,
-        "sellPrice":"500"
-    },
-    {    "_id":"6",
-        "title":"PRODI",
-        "imageUrl":p1,
-        "sellPrice":"500"
-    },
-    {    "_id":"7",
-        "title":"PRODI",
-        "imageUrl":p1,
-        "sellPrice":"500"
-    },
-    {    "_id":"8",
-        "title":"PRODI",
-        "imageUrl":p1,
-        "sellPrice":"500"
-    },
-    {    "_id":"9",
-        "title":"PRODI",
-        "imageUrl":p1,
-        "sellPrice":"500"
-    },
-]
-
-function Catalog(props) {
+function Showroom(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = useState('');
-  let history = useHistory();
+  const theme = useTheme();
+  const screen = useMediaQuery(theme.breakpoints.down('sm'));
   
-  const handleAddToCart = (id)=>{
-    props.addToCart(id); 
+  const handleAddToCart = (item)=>{
+    props.addToCart(item); 
   }
- const handleSubQuantity = (id)=>{
-    props.subQuantity(id)
+ const handleSubQuantity = (item)=>{
+    props.subQuantity(item)
  }
- 
- const handleNavigateToCart = ()=>{
-    history.push('/cart')
-  }
-//  useEffect(() => {
-//    if(history.location.pathname === '/'){
-//      props.getProducts(props.products.page);
-//    }
-//     },[]);
+
+ useEffect(() => {
+   const sort=1;
+   const limit =9;
+    props.getShowcaseProducts(sort,limit);
+    props.getCart()
+    },[]);
 
   const handleClickOpen = (id) => {
     setOpen(true);
@@ -217,31 +203,30 @@ function Catalog(props) {
   return (
    <div className={classes.root}>
         <Grid container >
-       { 1?
+       { !props.catalog.loadingProducts?
            <React.Fragment>
-               {data.map(item => 
+               {props.catalog.products.map(item => 
                  <Grid item key={item._id} xs={12} sm={6} md={4} style={{ marginTop:20}}>
                     <Card className={classes.card} elevation={3}>
                     <CardMedia
+                         onClick={()=>handleClickOpen(item._id)}
                         className={classes.cardMedia}
                         image={item.imageUrl}
                         title={item.name}
                         
                     />                  
                     <CardActions style={{display:'flex', justifyContent:'space-between'}}>
-                        <IconButton sise="small" >
-                        <IndeterminateCheckBoxIcon fontSize="large" style={{opacity:0.5}}/>
+                        <IconButton sise="small" onClick={()=>handleSubQuantity(item)} disabled={props.cart.addedItems.findIndex(el => el._id === item._id) === -1}>
+                        <IndeterminateCheckBoxIcon fontSize="large" style={{opacity:0.5}} />
                         </IconButton>
                         <div className={classes.countContainer}>
-                          {/* { props.products.addedItems.length !== 0 && props.products.addedItems.find(ele => ele._id === item._id) ?
-                              <Typography className={classes.count}>{props.products.addedItems.find(ele => ele._id === item._id).quantity}</Typography>:
+                          { props.cart.addedItems.findIndex(el => el._id === item._id) !== -1 ?
+                              <Typography className={classes.count}>{props.cart.addedItems.find(ele => ele._id === item._id).quantity}</Typography>:
                               <Typography className={classes.count}>{item.quantity}</Typography>
-                          } */}
-                         <Typography className={classes.count}>0</Typography>
-
+                          }
                         </div>
-                        <IconButton>
-                        <AddBoxIcon fontSize="large" style={{color:'#22223b'}}/>
+                        <IconButton onClick={()=>handleAddToCart(item)}>
+                        <AddBoxIcon fontSize="large" style={{color:'#E82430'}}/>
                         </IconButton>
                     </CardActions>
                     <Grid container style={{padding:10}}>
@@ -252,93 +237,103 @@ function Catalog(props) {
                         </Grid>
                         <Grid item xs={4}>
                         <Typography className={classes.price}>
-                            {item.sellPrice}{' DT'}
+                            {item.price}{' DT'}
                         </Typography>
                         </Grid>
                     </Grid>
                     </Card>
-                    {/* <Dialog
+                    <Dialog
                        open={open && item._id === selected}
                       keepMounted
+                      maxWidth={screen?'sm':'md'}
                       onClose={handleClose}
                       aria-labelledby="alert-dialog-slide-title"
                       aria-describedby="alert-dialog-slide-description"
                     >
                     <DialogContent dividers>
-                      <Grid container>
+                      <Grid container className={classes.dialogContainer}>
                         <Grid item xs={12} sm={6} style={{display:'flex', justifyContent:'center'}}>
-                          <img src={item.imageUrl } alt={item.title } style={{ width : '100%' }} />
+                          <img src={item.imageUrl } alt={item.title } style={{ width : '80%' }} />
                         </Grid>
                         <Grid  item xs={12} sm={6}>
-                          <h3 style={{ fontSize: '1.2rem'}}>{item.title}</h3>
-                          <h3 style={{ fontSize: '1.2rem'}}>{item.sellPrice} DT</h3>
-                          < DialogContentText id="alert-dialog-slide-description">
+                          <h3 className={classes.dialogTitle}>{item.title}</h3>
+                          <div className={classes.dialogPriceContainer}>
+                            <span className={classes.dialogPrice}>{item.price} DT</span>
+                          </div>
+                          < DialogContentText id="alert-dialog-slide-description" style={{ margin:'20px 0'}}>
                             {item.description }
                           </DialogContentText>
                           <CardActions style={{display:'flex', justifyContent:'space-between'}}>
-                            <IconButton sise="small" onClick={()=>handleSubQuantity(item._id)} disabled={props.products.addedItems.find(ele => ele._id === item._id)? false: item.quantity === 0}>
+                            <IconButton sise="small" onClick={()=>handleSubQuantity(item)} disabled={props.cart.addedItems.findIndex(el => el._id === item._id) === -1}>
                               <IndeterminateCheckBoxIcon fontSize="large" style={{opacity:0.5}}/>
                             </IconButton>
                             <div className={classes.countContainer}>
-                            { props.products.addedItems.length !== 0 && props.products.addedItems.find(ele => ele._id === item._id) ?
-                              <Typography className={classes.count}>{props.products.addedItems.find(ele => ele._id === item._id).quantity}</Typography>:
-                              <Typography className={classes.count}>{item.quantity}</Typography>}
+                            { props.cart.addedItems.findIndex(el => el._id === item._id) !== -1 ?
+                              <Typography className={classes.count}>{props.cart.addedItems.find(ele => ele._id === item._id).quantity}</Typography>:
+                              <Typography className={classes.count}>{item.quantity}</Typography>
+                          }
                             </div>
-                            <IconButton onClick={()=>handleAddToCart(item._id)}>
-                              <AddBoxIcon fontSize="large" style={{color:'#4528ba'}}/>
+                            <IconButton onClick={()=>handleAddToCart(item)}>
+                              <AddBoxIcon fontSize="large" style={{color:'#E82430'}}/>
                               </IconButton>
                           </CardActions>
+                          <div className={classes.dialogIconsContainer}>
+                          <div style={{ display:'flex',justifyContent:'start', alignItems:'center'}}>
+                            <LocalShippingIcon fontSize="small" style={{ color: '#008000', marginRight : 10, marginTop:-10}}/>
+                            <DialogContentText style={{ fontSize:15}}>
+                               Livraison gratuit
+                            </DialogContentText>
+                          </div>
+                          <div style={{ display:'flex',justifyContent:'start', alignItems:'center'}}>
+                            <AccountBalanceWalletIcon fontSize="small" style={{ color: '#008000', marginRight : 10, marginTop:-10}}/>
+                            <DialogContentText style={{ fontSize:15}}>
+                               Paiement à la livraison
+                            </DialogContentText>
+                          </div>
+                      </div>
                         </Grid>
                       </Grid>
-                      <div style={{ display:'flex', marginTop:'30px'}}>
-                        <LocalShippingIcon style={{ marginRight : 20}}/>
-                        <DialogContentText>
-                          Livraison gratuit pour les commandes qui dépassent <span style={{ color: '#000', fontWeight: 600}}>25 DT</span>
-                        </DialogContentText>
-                      </div>
-                      <div style={{ display:'flex'}}>
-                        <AccountBalanceWalletIcon style={{ marginRight : 20}}/>
-                        <DialogContentText>
-                          Paiement à la livraison
-                        </DialogContentText>
-                      </div>
+                      
                     </DialogContent>
-                    <div style={{display:'flex', justifyContent:'space-between'}}>
+                    <div className={classes.dialogBtnContainer}>
                         <Button onClick={handleClose} color="primary" variant="outlined" className={classes.link} style={{ textDecoration:'none'}}>
                           <ArrowBackIosIcon  fontSize='small'/>  Continuer 
                         </Button>
-                        <Button onClick={handleNavigateToCart} color="primary" variant="outlined" className={classes.link}>
-                          Commander  <ArrowForwardIosIcon fontSize='small'/>
+                       <Link href='/cart' style={{textDecoration:'none'}}>
+                        <Button color="primary" variant="outlined" className={classes.link}>
+                            Commander  <ArrowForwardIosIcon fontSize='small'/>
                         </Button>
+                       </Link>
                     </div>
-                </Dialog>*/}
+                </Dialog>
                 </Grid>)} 
-           </React.Fragment>:
-           <div style={{ margin :'0 auto', marginTop:100}}>
-               <CircularProgress  />
-           </div>
+           </React.Fragment>:<LoadingProducts />
        }
     </Grid>
+    <Link href={'/catalog/showroom'} style={{textDecoration:'none'}}>
     <div style={{ margin:'60px 0 120px 0', display:'flex', justifyContent:'center', zIndex:0, position:'relative'}}>
        <Button className={classes.myButton}>
        Voir Plus
        </Button>
      </div>
+     </Link>
    </div>
   )
 }
 
 const mapStateToProps = (state) => ({
-//  products: state.products
+ catalog: state.catalog,
+ cart :state.cart
 });
 
 const mapActionsToProps =   {
-//  getProducts,
-//   addToCart,
-//   subQuantity,
+ getShowcaseProducts,
+  addToCart,
+  subQuantity,
+  getCart
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(Catalog);
+)(Showroom);

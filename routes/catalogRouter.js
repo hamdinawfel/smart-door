@@ -3,8 +3,6 @@ const Products = require('../models/products');
 
 const catalogRouter = express.Router();
 
-
-
 catalogRouter.route('/')
 .get((req,res,next) => {
   Products.find({ tags: req.query.tag })
@@ -16,23 +14,18 @@ catalogRouter.route('/')
   .catch((err) => status(500).json(err));
 });
 
-catalogRouter.route('/search')
-.get((req,res,next) => {
-    Products.aggregate([
-      {
-        "$search":{
-          "text":{
-            "query":`${req.query.keyword}`,
-            "path":["title","category", "description"]
-          }
-        }
-      }
-  ], function (err, result) {
-    res.json(result);
-  }).allowDiskUse(true)
-});
 
-catalogRouter.route('/:category')
+catalogRouter.route('/showcase')
+.get((req,res,next) => {
+    Products.find({ showcase: true }).sort({_id:req.query.sort}).limit(parseInt(req.query.limit))
+    .then((products) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(products);
+    })
+    .catch((err) => status(500).json(err));
+});
+catalogRouter.route('/category/:category')
 .get((req,res,next) => {
     Products.aggregate([
         {
@@ -44,9 +37,30 @@ catalogRouter.route('/:category')
             "$project": {
               "createdAt": 0,
               "updatedAt": 0,
-              "stockAmount": 0,
-              "purchasePrice": 0,
-
+              "stock": 0,
+              "alertStock": 0,
+              "showcase": 0,
+            }
+        }
+    ], function (err, result) {
+        res.json(result);
+    })
+});
+catalogRouter.route('/subcategory/:subCategory')
+.get((req,res,next) => {
+    Products.aggregate([
+        {
+            "$match": {
+              subCategory: req.params.subCategory
+            }
+        },
+        {
+            "$project": {
+              "createdAt": 0,
+              "updatedAt": 0,
+              "stock": 0,
+              "alertStock": 0,
+              "showcase": 0,
             }
         }
     ], function (err, result) {

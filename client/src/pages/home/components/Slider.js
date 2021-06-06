@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
+
 import '../assets/style.scss'
 //swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, {
-    EffectCoverflow,Pagination, Navigation, Parallax
+    EffectCoverflow,Pagination, Navigation, Parallax, Autoplay
   } from 'swiper/core';
 import "swiper/swiper.min.css";
 import "swiper/components/effect-coverflow/effect-coverflow.min.css"
@@ -16,10 +18,8 @@ import Button from '@material-ui/core/Button';
 //redux set up
 import SliderLoading from './SliderLoading'
 import { connect } from 'react-redux';
-import { getCategories } from '../../catalog/actions'
-
 // install Swiper modules
-SwiperCore.use([EffectCoverflow,Pagination, Navigation, Parallax]);
+SwiperCore.use([EffectCoverflow,Pagination, Navigation, Parallax,Autoplay]);
 
 const useStyles = makeStyles((theme) => ({
  button:{
@@ -39,9 +39,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Slider(props) {
   const classes = useStyles();
-  useEffect(() => {
-    props.getCategories();
-  }, []);
+  let history = useHistory();
+
+  const handleNavigateToCatalog = (subCategory)=>{
+    let url = `/catalog/${subCategory.replace(/ /g, '-')}`
+    history.push(url)
+  }
   return (
     <div style={{ padding:0}}>
        { props.catalog.loadingCategories?
@@ -55,6 +58,10 @@ function Slider(props) {
                 slidesPerView={2}
                 init= {false}
                 loop= {true}
+                autoplay={{
+                  "delay": 2500,
+                  "disableOnInteraction": false
+                }}
                 speed={500}
                 parallax={true}
                 coverflowEffect={{
@@ -70,11 +77,11 @@ function Slider(props) {
                 >
             
             {props.catalog.categories.map(item =><SwiperSlide key={item._id}>
-            <div className="swiper-slide"  style={{ backgroundImage:`url(${item.imageUrl})`}}>
+            <div className="swiper-slide"  style={{ backgroundImage:`url(${item.imageUrl})`}} onClick={()=>handleNavigateToCatalog(item.name)}>
                 <div className="content">
                   <p className="title">{item.title}</p>
                   <span className="caption">{item.caption}</span>
-                  <Button className={classes.button}>Découvrir</Button>
+                  <Button onClick={()=>handleNavigateToCatalog(item.name)} className={classes.button}>Découvrir</Button>
                 </div>
               </div>
             </SwiperSlide>)}
@@ -91,12 +98,7 @@ const mapStateToProps = (state) => ({
   catalog: state.catalog
  });
  
- const mapActionsToProps =   {
-  getCategories,
-
- };
- 
  export default connect(
    mapStateToProps,
-   mapActionsToProps
+   null
  )(Slider);

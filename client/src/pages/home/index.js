@@ -8,12 +8,12 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Zoom from '@material-ui/core/Zoom';
 //components
 import Slider from './components/Slider'
+import Showroom from './components/Showroom'
 import CommonQuestions from './components/CommonQuestions'
 import Testimonial from './components/Testimonial'
-import BestSelling from '../catalog/components/BestSelling'
-import Card from '../catalog/components/Card'
 //utils
 import Navbar from '../../utils/navbar/index';
+import Footer from '../../utils/footer/index'
 import NewsLetter from '../../feature/subscribe/index';
 import Title from '../../utils/Title'
 
@@ -66,8 +66,7 @@ export default function Index(props) {
         <Slider />
         </div>
         <Title title="Show Room"/>
-        {/* <BestSelling /> */}
-        <Card />
+        <Showroom />
         <Testimonial />
         <CommonQuestions />
         <NewsLetter />
@@ -77,6 +76,7 @@ export default function Index(props) {
           <KeyboardArrowUpIcon style={{ color:'#fff'}}/>
         </Fab>
       </ScrollTop>
+      <Footer />
     </div>
   );
 }

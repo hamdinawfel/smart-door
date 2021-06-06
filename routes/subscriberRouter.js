@@ -46,7 +46,7 @@ subscriberRouter.route('/')
             let mailOptions = {
               from:`${process.env.NODEMAILAR_USER}`, 
               to:  req.body.email, 
-              subject: 'Inscription à notre la Newsletter réussit',
+              subject: 'You have successfully subscribed',
               text: 'Welcome to Dinari Green Life',
               template: 'subscribe',
               attachments: [{
@@ -100,7 +100,7 @@ subscriberRouter.route('/:userId')
     res.statusCode = 403;
     res.end('PUT operation not supported on /subscribe' + req.params.userId);
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
   Subscribers.findByIdAndRemove(req.params.userId)
   .then((resp) => {
       res.statusCode = 200;

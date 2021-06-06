@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 //utils
-import Footer from './utils/footer/index';
 import ScrollToTop from './utils/ScrollToTop';
 // import PrivateRoute from './utils/PrivateRoute';
 //pages
@@ -13,7 +12,7 @@ import Home from './pages/home/index';
 import Catalog from './pages/catalog/index';
 import Error from './pages/error/index';
 
-// import Cart from './pages/cart/index';
+import Cart from './pages/cart/index';
 import Activate from './feature/auth/Activate';
 import ResetPwd from './feature/auth/ResetPwd';
 import Auth from './feature/auth/Auth';
@@ -56,9 +55,9 @@ function App() {
                   <Route exact path="/reset-password/:resetLink" component={ ResetPwd } />
                   <Route exact path="/connextion" component={ Auth } />
                   <Route  path="/catalog/:category" component={ Catalog } />
-                  {/* <Route  path="/catalog" component={ Catalog } /> */}
-                  {/* <Route exact path="/cart" component={ Cart } />
-                  <Route exact path="/collecte" component={ Collecte } />
+                  <Route exact path="/cart" component={ Cart } />
+                  
+                    {/*   <Route exact path="/collecte" component={ Collecte } />
                   <PrivateRoute exact path="/checkout" component={ Checkout } /> */}
                   {/* <Route exact path="/error" component={ Error } />  */}
                 </Switch>

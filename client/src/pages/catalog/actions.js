@@ -1,13 +1,10 @@
 import {
   LOADING_CATEGORIES,
   GET_CATEGORIES,
-  LOADING_SUBCATEGORIES,
-  GET_SUBCATEGORIES,
   LOADING_PRODUCTS,
-  GET_PRODUCTS,
-  GET_CATALOG,
-  LOADING_SEARCH,
-  GET_SEARCH,
+  GET_SHOWCASE,
+  GET_BY_CATEGORY,
+  GET_BY_SUB_CATEGORY,
   SET_ERROR
     } from './types';
 import axios from 'axios';
@@ -27,31 +24,14 @@ export const getCategories = () => (dispatch) => {
         dispatch({ type: SET_ERROR  });
   });
 }
- 
-// SUBCATEGORY MANAGEMENT
-export const getSubCategories = () => (dispatch) => {
-  dispatch({ type: LOADING_SUBCATEGORIES });
-    axios
-    .get('/subcategory')
-      .then((res) => {
-        dispatch({
-          type: GET_SUBCATEGORIES,
-          payload: res.data
-        });
-      })
-      .catch((err) => {
-        dispatch({ type: SET_ERROR  });
-  });
-}
-    
-// PRODUCTS MANAGEMENT
-export const getProducts = () => (dispatch) => {
+//showroom setup
+export const getShowcaseProducts = (sort,limit) => (dispatch) => {
   dispatch({ type: LOADING_PRODUCTS });
     axios
-    .get('/products')
+    .get(`/catalog/showcase?sort=${sort}&limit=${limit}`)
       .then((res) => {
         dispatch({
-          type: GET_PRODUCTS,
+          type: GET_SHOWCASE,
           payload: res.data
         });
       })
@@ -59,14 +39,14 @@ export const getProducts = () => (dispatch) => {
         dispatch({ type: SET_ERROR  });
   });
 }
-// FILTER MANAGEMENT
-export const getCatalog = (tag) => (dispatch) => {
+//GET BY CATEGORY
+export const getByCategory = (category) => (dispatch) => {
   dispatch({ type: LOADING_PRODUCTS });
     axios
-    .get(`/catalog?tag=${tag}`)
+    .get(`/catalog/category/${category}`)
       .then((res) => {
         dispatch({
-          type: GET_CATALOG,
+          type:   GET_BY_CATEGORY,
           payload: res.data
         });
       })
@@ -74,14 +54,14 @@ export const getCatalog = (tag) => (dispatch) => {
         dispatch({ type: SET_ERROR  });
   });
 }
-//SEARCH
-export const search = (searchText) => (dispatch) => {
-  dispatch({ type: LOADING_SEARCH });
+//GET BY SUBCATEGORY
+export const getBySubCategory = (subCategory) => (dispatch) => {
+  dispatch({ type: LOADING_PRODUCTS });
     axios
-    .get(`catalog/search?keyword=${searchText}`)
+    .get(`/catalog/subcategory/${subCategory}`)
       .then((res) => {
         dispatch({
-          type: GET_SEARCH,
+          type:   GET_BY_SUB_CATEGORY,
           payload: res.data
         });
       })
