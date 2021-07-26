@@ -9,6 +9,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
+import Chip from '@material-ui/core/Chip';
+
 //icon
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -19,6 +21,8 @@ import {faFacebookF} from '@fortawesome/fontawesome-free-brands';
 import {faGoogle} from '@fortawesome/fontawesome-free-brands';
 import {faYoutube} from '@fortawesome/fontawesome-free-brands';
 import PhoneIcon from '@material-ui/icons/Phone';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+
 //assets
 import logo from '../assets/logo.jpg'
 //redux
@@ -72,8 +76,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor:'#fff',
   },
  icon:{
-   fontSize:18,
-   margin:'0 8px',
+   fontSize:16,
+   margin:'8px 5px',
    [theme.breakpoints.down('sm')]: {
        display:'flex',  
    },
@@ -152,12 +156,13 @@ return (
                           <FontAwesomeIcon icon={faYoutube}  className={classes.icon}/>
                         </span>
                       </Link>
-                      <span>
-                      <PhoneIcon style={{fontSize:20, margin:'0 8px'}}/>
-                        </span>
-                        <span className={classes.phoneNumber}>
-                          22 550 675
-                        </span>
+                      <Chip
+                        style={{fontWeight:300, fontSize:13}}
+                        variant="outlined"
+                        avatar={<WhatsAppIcon />}
+                        size="medium"
+                        label="+216 22 550 675"
+                        />
                    </div>
                      {props.catalog.loadingCategories?
                       null

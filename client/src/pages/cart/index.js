@@ -215,7 +215,7 @@ const useStyles = makeStyles(theme => ({
                  <ArrowBackIosIcon  fontSize='small'/>  Continuer 
                </Button>
             </Link>
-              <Button  href={'/catalog/showroom'} color="primary" variant="outlined" className={classes.link}>
+              <Button  href='#' color="primary" variant="outlined" className={classes.link}>
               Commander  <ArrowForwardIosIcon style={{marginLeft: 10}}/>
             </Button>
           </div>

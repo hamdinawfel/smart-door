@@ -1,113 +1,110 @@
-import React from 'react';
-//M-UI
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Chip from '@material-ui/core/Chip';
+import React, { useState, useEffect } from 'react';
+//
+import { useParams } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
-//M-UI ICONS
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import LockIcon from '@material-ui/icons/Lock';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-//components
-import PhoneDrawer from './components/PhoneDrawer'
-//Redux setup
+//Components
+import Main from './components/Main'
+//utils
+import Navbar from '../../utils/navbar/index';
+import Footer from '../../utils/footer/index';
+//redux set up
 import { connect } from 'react-redux';
-import { logoutUser } from '../../feature/auth/action'
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-    avatar:{
-        color:'#fff',
-        float:'right',
-        borderColor: '#5590e2',
-        textTransform:'lowercase',
-        [theme.breakpoints.down('sm')]: {
-            display:'none',  
-        },
-    },
-    phoneAvatar:{
-        textAlign:'end',
-        marginLeft:70,
-        marginTop:20,
-        [theme.breakpoints.up('md')]: {
-            display:'none',  
-        },
-    }
-  }));
- function Profile(props) {
-  const classes = useStyles();
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleLogOut = () => {
-    props.logoutUser();
-    setAnchorEl(null);
+  header:{
+    margin:'30px 0'
+  },
+  avatarContainer:{
+    background:theme.palette.primary.main,
+    margin:'0 auto',
+    width:60,
+    height:60,
+    display:'flex',
+    marginBottom:30,
+    alignItems:'center',
+    justifyContent:'center',
+    transform: 'rotate(45deg)',
+    [theme.breakpoints.down('sm')]: {
+      marginTop:50
+     },
+  },
+  avatar:{
+    color:'#fff',
+    fontSize:'2rem',
+    fontWeight:900,
+    textTransform:'uppercase',
+    transform: 'rotate(-45deg)',
+  },
+  name:{
+    // color:'#fff',
+    fontSize:'22px',
+    fontWeight:600,
+    textTransform:'uppercase',
+    textAlign:'center'
+  },
+  email:{
+    // color:'#fff',
+    fontSize:'16px',
+    textTransform:'lowercase',
+    textAlign:'center'
+  },
+  loading:{
+    display:'block',
+    margin:'0 auto',
+    marginTop:150,
+    marginBottom:150,
   }
-  return (
-    <div>
-      <Chip
-        className={classes.avatar}
-        avatar={<AccountCircleIcon style={{ color:'#5590e2'}}/>}
-        label={props.user.user.name}
-        onClick={handleClick}
-        variant="outlined"
-      />
-      <PhoneDrawer className={classes.phoneAvatar}/>
-      <Menu
-       style={{ marginTop: 45}}
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <AccountBoxIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <AccountBalanceWalletIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Balence" />
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <ListAltIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Mes ordres" />
-        </MenuItem>
-        <MenuItem onClick={handleLogOut}>
-          <ListItemIcon>
-            <LockIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Déconnexion" />
-        </MenuItem>
+}));
 
-      </Menu>
+function Profile(props) {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  let { section } = useParams();
+  useEffect(() => {
+   switch (section) {
+     case 'controle-panel':
+       setValue(0);
+       break;
+     case 'orders':
+       setValue(1);
+       break;
+     case 'settings':
+       setValue(2);
+       break;
+     default:
+       setValue(0);
+   }
+  }, []);
+ 
+  return (
+    <div className={classes.root}>
+      <Navbar />
+       {!props.user.loading?
+       <div className={classes.header}>
+         <div className={classes.avatarContainer}>
+           <h1 className={classes.avatar}>{props.user.user.name[0]}</h1>
+          </div>
+          <h1 className={classes.name}>{props.user.user.name}</h1>
+          <p className={classes.email}>{props.user.user.email}</p>
+          <Main />
+       </div>
+       :
+       <CircularProgress className={classes.loading}/>}
+      <Footer />
     </div>
   );
 }
+
 const mapStateToProps = (state) => ({
   user: state.user
  });
- const mapActionsToProps =   {
-  logoutUser
- };
+ 
  export default connect(
    mapStateToProps,
-   mapActionsToProps
+   null
  )(Profile);

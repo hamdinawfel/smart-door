@@ -23,7 +23,7 @@ function LoginWithGoogle(props) {
            name:`${ res.profileObj.givenName} ${res.profileObj.familyName}`,
            email: res.profileObj.email,
          }
-        props.authUser(userData);
+        // props.authUser(userData);
       }
     
     return (

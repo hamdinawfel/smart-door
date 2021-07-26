@@ -49,7 +49,7 @@ export default function ProductsLoading() {
                     <Skeleton 
                         key={item} 
                         variant="rect"
-                        width={380} 
+                        width={300} 
                         height={350}
                         style={{borderRadius:19, margin:10}}/>
                 </Grid>

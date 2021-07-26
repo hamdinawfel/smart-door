@@ -7,17 +7,20 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Slide from '@material-ui/core/Slide';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import Chip from '@material-ui/core/Chip';
+
 import { makeStyles } from '@material-ui/core/styles';
 //icon
  import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
  import {faFacebookF} from '@fortawesome/fontawesome-free-brands';
  import {faGoogle} from '@fortawesome/fontawesome-free-brands';
  import {faYoutube} from '@fortawesome/fontawesome-free-brands';
- import PhoneIcon from '@material-ui/icons/Phone';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+
  //Components
 import PhoneNavbar from './components/PhoneNavbar'
 import Category from './components/Category'
-import Profile from '../../pages/profile/index'
+import DropList from '../../pages/profile/components/DropList'
  //logo
 import logo from './assets/logo.jpg'
 //Redux
@@ -25,7 +28,7 @@ import { connect } from 'react-redux';
 import { getCategories } from '../../pages/catalog/actions';
 const useStyles = makeStyles((theme) => ({
   hideAppBar: {
-    zIndex: 2,
+    zIndex: 4,
     backgroundColor:theme.palette.primary.white,
     userSelect:'none',
     padding:'3px 80px 0 80px',
@@ -142,12 +145,14 @@ function Navbar(props) {
                       <FontAwesomeIcon icon={faYoutube}  className={classes.icon}/>
                     </span>
                   </Link>
-                  <span>
-                      <PhoneIcon style={{fontSize:24, margin:'0 10px'}}/>
-                   </span>
-                  <span className={classes.phoneNumber}>
-                     22 550 675
-                   </span>
+                  <Chip
+                    style={{fontWeight:600, fontSize:16}}
+                    variant="outlined"
+                    avatar={<WhatsAppIcon />}
+                    size="medium"
+                    label="+216 22 550 675"
+                    />
+                  
                </Grid>
                <Grid item xs={5} md={4}>
                  {
@@ -156,7 +161,7 @@ function Navbar(props) {
                           <Button variant="contained" className={classes.sginup}>Connextion</Button>
                       </Link>
                       :
-                      <Profile />
+                      <DropList />
                   }
                </Grid>
            </Grid>

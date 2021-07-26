@@ -27,7 +27,7 @@ router.post('/signup', (req, res, next) => {
 User.findOne({ email: req.body.email })
       .then(user =>{
         if(user){
-            return res.status(400).json({ email: "Email already exists" });
+            return res.status(400).json({ email: "Email existe déjà" });
         }
        let token = jwt.sign(
           { name,
@@ -60,14 +60,24 @@ User.findOne({ email: req.body.email })
           let mailOptions = {
             from: `${process.env.NODEMAILAR_USER}`, 
             to: email, 
-            subject: 'Complete Registration',
-            text: 'Welcome to Dinari Green Life',
+            subject: 'Activation de votre compte',
+            text: 'Bienvenue à Dinari Green Life',
             template: 'activate',
             attachments: [{
               filename: 'logo.jpg',
-                path:'./uploads/logo.jpg',
+                path:'./emails/assets/logo.jpg',
                cid: 'logo'
-              }],
+              },
+              {
+                filename: 'ico-facebook.png',
+                 path:'./emails/assets/ico-facebook.png',
+                 cid: 'ico-facebook'
+                },
+                {
+                  filename: 'ico-youtube.png',
+                   path:'./emails/assets/ico-youtube.png',
+                   cid: 'ico-youtube'
+                }],
             context: {
               name: req.body.name,
               URL: process.env.CLIENT_URL,
@@ -93,13 +103,13 @@ router.post('/activate', (req, res, next) => {
   if(token){
       jwt.verify(token,  process.env.JWT_ACTIVATE_SECRET, (err, decodedToken)=>{
         if(err){
-          return res.status(400).json({error:"Expired link"})
+          return res.status(400).json({error:"Lien expiré"})
         }
         const {name, email, password } = decodedToken;
        User.findOne({ email })
         .then(user =>{
             if(user){
-                return res.status(400).json({ error: "This account is active" });
+                return res.status(400).json({ error: "Ce compte est actif" });
             }else{
                 bcrypt.hash(password, 10).then(hash => {
                     const user = new User({
@@ -123,7 +133,7 @@ router.post('/activate', (req, res, next) => {
                       })
                       .catch(err => {
                         res.status(500).json({
-                          error: "Invalid authentication credentials!"
+                          error: "Identifiants d'authentification non valides!"
                         });
                       });
                   });
@@ -139,7 +149,7 @@ router.post('/forgot-password', (req, res, next) => {
   const { email } = req.body
   User.findOne({ email }, (err, user) => {
       if(err || !user ){
-          return res.status(400).json({ email: "Email Not Found" });
+          return res.status(400).json({ email: "Email non trouvé" });
       };
      const token = jwt.sign({id : user._id },
       process.env.JWT_RESET_PASSWORD_SECRET,
@@ -170,13 +180,23 @@ transporter.use('compile', hbs(handlebarOptions));
   let mailOptions = {
     from: `${process.env.NODEMAILAR_USER}`, 
     to: email, 
-    subject: 'Reset password link',
-    text: 'Welcome back to Dinari Green Life',
+    subject: 'Mot de passe oublié?',
+    text: 'Bienvenue à Dinari Green Life',
     template: 'forgotPwd',
       attachments: [{
         filename: 'logo.jpg',
-          path:'./uploads/logo.jpg',
+          path:'./emails/assets/logo.jpg',
           cid: 'logo'
+        },
+        {
+        filename: 'ico-facebook.png',
+          path:'./emails/assets/ico-facebook.png',
+          cid: 'ico-facebook'
+        },
+        {
+          filename: 'ico-youtube.png',
+            path:'./emails/assets/ico-youtube.png',
+            cid: 'ico-youtube'
         }],
       context: {
         URL: process.env.CLIENT_URL,
@@ -209,12 +229,12 @@ router.post('/reset-password', (req, res, next) => {
     if( resetLink){
       jwt.verify(resetLink,  process.env.JWT_RESET_PASSWORD_SECRET, (err, decodedToken)=>{
         if(err){
-          return res.status(400).json({error: 'Expired link'})
+          return res.status(400).json({error: 'Lien expiré'})
         }
        
        User.findOne({ resetLink }, (err, user)=> {
         if(err || !user ){
-          return res.status(400).json({ error: "User with this token does not exist" });
+          return res.status(400).json({ error: "Utilisateur non trouvé" });
          };
             bcrypt.hash(req.body.password, 10).then(hash => {
                     const obj = {
@@ -249,14 +269,24 @@ router.post('/reset-password', (req, res, next) => {
                       let mailOptions = {
                         from: `${process.env.NODEMAILAR_USER}`, 
                         to: user.email, 
-                        subject: 'Your password has been changed',
-                        text: 'Welcome back to Dinari Green Life',
+                        subject: 'Votre mot de passe a été modifié avec avec succès',
+                        text: 'Bienvenue to Dinari Green Life',
                         template: 'resetPwd',
                         attachments: [{
                           filename: 'logo.jpg',
-                            path:'./uploads/logo.jpg',
+                            path:'./emails/assets/logo.jpg',
                             cid: 'logo'
-                          }],
+                          }, 
+                          {
+                            filename: 'ico-facebook.png',
+                              path:'./emails/assets/ico-facebook.png',
+                              cid: 'ico-facebook'
+                            },
+                            {
+                              filename: 'ico-youtube.png',
+                                path:'./emails/assets/ico-youtube.png',
+                                cid: 'ico-youtube'
+                            }],
                        };
                         transporter.sendMail(mailOptions, (error, info) => {
                           if (error) {
@@ -296,7 +326,7 @@ router.post('/login', (req, res ) => {
   User.findOne({ email: req.body.email })
     .then(user => {
         if (!user) {
-            return res.status(404).json({ email: "Email Not Found" });
+            return res.status(404).json({ email: "Email non trouvé" });
           }else{
             bcrypt.compare(req.body.password, user.password).then(isMatch => {
                 if (isMatch) {
@@ -311,7 +341,7 @@ router.post('/login', (req, res ) => {
                             }
                       );
                 }else{
-                    return res.status(400).json({ password: "Incorrect Password" });
+                    return res.status(400).json({ password: "Mot de passe incorrect" });
                 }
             })
           }

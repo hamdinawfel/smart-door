@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius:'25px',
     width:'100%',
-   
     padding:'5px auto',
     [theme.breakpoints.up('md')]: {
       width:'50%',
@@ -131,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
       margin:'50px 0',
   },
   dialogIconsContainer:{
-    display:'flex',
+    display:'block',
     justifyContent:'space-around',
     marginTop:'30px',
     [theme.breakpoints.down('sm')]: {

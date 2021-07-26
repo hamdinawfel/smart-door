@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
           >
             {props.name}
           </Button>
-          <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{zIndex:2}}>
+          <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
             {({ TransitionProps, placement }) => (
               <Grow
                 {...TransitionProps}

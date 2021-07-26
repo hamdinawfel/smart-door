@@ -12,7 +12,7 @@ function LoginWithFacebook(props) {
             name: res.name,
             email: res.email,
           }
-         props.authUser(userData);
+        //  props.authUser(userData);
       }
      
     return (

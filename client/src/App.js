@@ -6,13 +6,14 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 //utils
 import ScrollToTop from './utils/ScrollToTop';
-// import PrivateRoute from './utils/PrivateRoute';
+import PrivateRoute from './utils/PrivateRoute';
 //pages
 import Home from './pages/home/index';
 import Catalog from './pages/catalog/index';
-import Error from './pages/error/index';
-
 import Cart from './pages/cart/index';
+import Profile from './pages/profile/index';
+import Error from './pages/error/index';
+//Feature
 import Activate from './feature/auth/Activate';
 import ResetPwd from './feature/auth/ResetPwd';
 import Auth from './feature/auth/Auth';
@@ -56,13 +57,9 @@ function App() {
                   <Route exact path="/connextion" component={ Auth } />
                   <Route  path="/catalog/:category" component={ Catalog } />
                   <Route exact path="/cart" component={ Cart } />
-                  
-                    {/*   <Route exact path="/collecte" component={ Collecte } />
-                  <PrivateRoute exact path="/checkout" component={ Checkout } /> */}
-                  {/* <Route exact path="/error" component={ Error } />  */}
+                  <PrivateRoute exact path="/profile/:section" component={ Profile } />
                 </Switch>
               </div>
-          {/* <Footer /> */}
           </Router>
       </ThemeProvider>
      </Provider>

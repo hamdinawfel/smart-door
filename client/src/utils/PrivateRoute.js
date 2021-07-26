@@ -1,11 +1,13 @@
-import React from "react";
+import React  from "react";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-const PrivateRoute = ({ component: Component, addedItems, ...rest }) => (
+
+
+const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      addedItems.length !== 0 ? (
+      localStorage.jwtToken? (
         <Component {...props} />
       ) : (
         <Redirect to="/" />
@@ -15,6 +17,6 @@ const PrivateRoute = ({ component: Component, addedItems, ...rest }) => (
 );
 
 const mapStateToProps = state => ({
-  addedItems : state.products.addedItems
+  authenticated: state.user.authenticated
 });
 export default connect(mapStateToProps)(PrivateRoute);

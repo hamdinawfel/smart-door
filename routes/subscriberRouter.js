@@ -46,14 +46,27 @@ subscriberRouter.route('/')
             let mailOptions = {
               from:`${process.env.NODEMAILAR_USER}`, 
               to:  req.body.email, 
-              subject: 'You have successfully subscribed',
-              text: 'Welcome to Dinari Green Life',
+              subject: 'Merci de vous être inscrit à notre newsletter',
+              text: 'Votre inscription a été confirmée avec succès',
               template: 'subscribe',
               attachments: [{
                 filename: 'logo.jpg',
-                  path:'./uploads/logo.jpg',
+                  path:'./emails/assets/logo.jpg',
                 cid: 'logo'
-                }], 
+                },
+                {
+                  filename: 'ico-facebook.png',
+                   path:'./emails/assets/ico-facebook.png',
+                   cid: 'ico-facebook'
+                  },
+                  {
+                    filename: 'ico-youtube.png',
+                     path:'./emails/assets/ico-youtube.png',
+                     cid: 'ico-youtube'
+                  }], 
+                  context: {
+                    URL: process.env.CLIENT_URL,
+                } 
           };
           
             Subscribers.create(req.body)
