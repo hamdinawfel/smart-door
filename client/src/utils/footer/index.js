@@ -36,14 +36,24 @@ export default function Footer() {
             <img src={logo} alt="Dinari" style={{width:70, cursor:'pointer'}} onClick={handleNavigateToHome}/>
             <h3  onClick={handleNavigateToHome}>Dinari</h3>
           </div>
-    
-            <p className="footer-links">
-              <a href="#" className="link-1">Accueil</a>
-              <a href="#" >Catalogue</a>
-              <a href="#">Connexion</a> {/* FIXME: */}
-            </p>
-    
-            <p className="footer-company-name" style={{ color:'#92999f'}}>Powred by BS Partage. Copyright © 2021.</p>
+          <div className="footer-icons">
+            <Link target="_blank" rel="noreferrer" color="inherit" href="https://www.facebook.com/dinari.green/">
+              <span>
+                 <FontAwesomeIcon icon={faFacebookF}  className="icon"/>
+              </span>
+            </Link>
+            <Link color="inherit" target="_blank" rel="noreferrer" href="https://www.google.com/maps/place/Dinari+green+life/@34.4311398,8.7756556,15z/data=!4m5!3m4!1s0x0:0xeabd5e6cd48f9c33!8m2!3d34.4311398!4d8.7756556">
+              <span>
+                <FontAwesomeIcon icon={faGoogle} className="icon"/>
+              </span>
+            </Link>
+            <Link color="inherit" target="_blank" rel="noreferrer" href="https://www.youtube.com/channel/UCt1IIo_U9Hc11kBEY6OxMVw/">
+              <span>
+                <FontAwesomeIcon icon={faYoutube}  className="icon"/>
+              </span>
+            </Link>
+          </div>
+            <p className="footer-company-name" style={{ color:'#92999f', marginTop:20}}>Powred by BS Partage. Copyright © 2021.</p>
           </div>
           
           <div className="footer-center">
@@ -89,24 +99,6 @@ export default function Footer() {
               Nous ne sommes pas les seuls, mais nous avons les meilleurs rapports qualité prix dans la fabrication des portes et des menuiseries.<br/>
               La société Dinari green life, fondée en 2009 vous offre une vaste gamme des portes par des design modernes et de couleurs tendance.
             </p>
-    
-            <div className="footer-icons">
-            <Link target="_blank" rel="noreferrer" color="inherit" href="https://www.facebook.com/dinari.green/">
-              <span>
-                 <FontAwesomeIcon icon={faFacebookF}  className="icon"/>
-              </span>
-            </Link>
-            <Link color="inherit" target="_blank" rel="noreferrer" href="https://www.google.com/maps/place/Dinari+green+life/@34.4311398,8.7756556,15z/data=!4m5!3m4!1s0x0:0xeabd5e6cd48f9c33!8m2!3d34.4311398!4d8.7756556">
-              <span>
-                <FontAwesomeIcon icon={faGoogle} className="icon"/>
-              </span>
-            </Link>
-            <Link color="inherit" target="_blank" rel="noreferrer" href="https://www.youtube.com/channel/UCt1IIo_U9Hc11kBEY6OxMVw/">
-              <span>
-                <FontAwesomeIcon icon={faYoutube}  className="icon"/>
-              </span>
-            </Link>
-            </div>
           </div>
         </footer>
   );

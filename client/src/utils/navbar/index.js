@@ -2,30 +2,40 @@ import React, {useEffect} from 'react';
 //M-UI
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
+import Badge from '@material-ui/core/Badge';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Slide from '@material-ui/core/Slide';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Chip from '@material-ui/core/Chip';
-
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 //icon
  import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
  import {faFacebookF} from '@fortawesome/fontawesome-free-brands';
  import {faGoogle} from '@fortawesome/fontawesome-free-brands';
  import {faYoutube} from '@fortawesome/fontawesome-free-brands';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
  //Components
 import PhoneNavbar from './components/PhoneNavbar'
 import Category from './components/Category'
-import DropList from '../../pages/profile/components/DropList'
  //logo
 import logo from './assets/logo.jpg'
 //Redux
 import { connect } from 'react-redux';
 import { getCategories } from '../../pages/catalog/actions';
+
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    right: -10,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+    float:'right'
+  },
+}))(Badge);
+
 const useStyles = makeStyles((theme) => ({
   hideAppBar: {
     zIndex: 4,
@@ -97,7 +107,15 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid #9ef01a`,
     padding: 5,
     borderRadius:'5px',
- }
+ },
+cart:{
+  marginTop:20,
+  float:'right',
+  cursor:'pointer',
+  [theme.breakpoints.down('sm')]: {
+    marginRight:10
+  }
+}
 }));
 //
 function HideOnScroll(props) {
@@ -155,14 +173,21 @@ function Navbar(props) {
                   
                </Grid>
                <Grid item xs={5} md={4}>
-                 {
+                <div className={classes.cart}>
+                  <Link href='/cart' style={{textDecoration:'none', color:'inherit'}}>
+                    <StyledBadge badgeContent={props.cart.count} color="primary">
+                        <ShoppingCartIcon />
+                    </StyledBadge>
+                  </Link>
+                </div>
+                 {/* {
                     !props.user.authenticated?
                       <Link href="/connextion" style={{ textDecoration:'none',  float:'right'}}>
                           <Button variant="contained" className={classes.sginup}>Connextion</Button>
                       </Link>
                       :
                       <DropList />
-                  }
+                  } */}
                </Grid>
            </Grid>
           </Toolbar>
@@ -179,7 +204,8 @@ function Navbar(props) {
 }
 const mapStateToProps = (state) => ({
   catalog: state.catalog,
-  user: state.user
+  user: state.user,
+  cart : state.cart
 });
 const mapActionsToProps =   {
   getCategories

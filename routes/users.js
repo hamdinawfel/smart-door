@@ -347,6 +347,8 @@ router.post('/login', (req, res ) => {
           }
     })
 });
+// 
+
 
 router.post('/auth', (req, res ) => {
   User.findOne({ email: req.body.email })

@@ -60,10 +60,14 @@ const useStyles = makeStyles(theme => ({
         width:100,
         [theme.breakpoints.down('sm')]: {
           width:50,
+          display:'block',
+          margin:'0 auto',
+          marginTop:15
+
         }
       },
       title:{
-        fontWeight:900,
+        fontWeight:600,
         color:'rgba(0,0,0,0.5)',
         fontSize:22,
         marginLeft:20,
@@ -90,6 +94,10 @@ const useStyles = makeStyles(theme => ({
       totalContainer:{
         marginTop: 20,
         padding :'30px 50px',
+        [theme.breakpoints.down('sm')]: {
+          padding :'30px 10px',
+
+        },
       },
         btnContainer:{
           display:'flex',
@@ -149,12 +157,7 @@ const useStyles = makeStyles(theme => ({
     const handleSubQuantity = (item)=>{
       props.subQuantity(item)
     }
-    const handleRemoveItem = (id)=>{
-      // props.removeItem(id)
-    }
-    // const handleClearAll = ()=>{
-    //   props.clearAll()
-    // }
+   
     return (
         <div>
           <Navbar />
@@ -165,13 +168,13 @@ const useStyles = makeStyles(theme => ({
             <Grid className={classes.table} component={Paper}>
                   {props.cart.addedItems.map((row) => (
                     <Grid container key={row.title} className={classes.container}>
-                      <Grid xs={3} sm={6}>
+                      <Grid xs={3} sm={4}>
                             <div style={{ display:'flex', alignItems:'center'}}> 
-                                <img src={row.imageUrl} alt={row.title} style={{width : 100}} />
+                                <img src={row.imageUrl} alt={row.title} className={classes.image} />
                                 <p className={classes.title}>{row.title}</p>
                             </div>
                         </Grid>
-                      <Grid xs={6} sm={3} style={{ display:'flex', alignItems:'center'}}>
+                      <Grid xs={6} sm={4} style={{ display:'flex', alignItems:'center', justifyContent:'center'}}>
                         <CardActions style={{display:'flex'}}>
                           <IconButton sise="small" onClick={()=>handleSubQuantity(row)}>
                             <IndeterminateCheckBoxIcon fontSize="large" style={{opacity:0.5}} />
@@ -184,28 +187,23 @@ const useStyles = makeStyles(theme => ({
                             </IconButton>
                         </CardActions>
                       </Grid>
-                      <Grid xs={2} style={{ display:'flex', alignItems:'center'}}>
+                      <Grid xs={3}  sm={4} style={{ display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
                         <sapn className={classes.count}>
                            {parseFloat(row.price* row.quantity ).toFixed(0)} DT
                         </sapn>
-                      </Grid>
-                      <Grid xs={1} sm={1} style={{ display:'flex', alignItems:'center', float:'right'}}>
-                        <IconButton size="small" onClick={()=>handleRemoveItem(row._id)}>
-                              <ClearIcon />
-                          </IconButton>
                       </Grid>
                     </Grid>
                   ))}
           </Grid>
           <Grid container component={Paper} className={classes.totalContainer}> 
               <Divider /> 
-            <Grid item xs={9}>
+            <Grid item xs={6}>
               <p className={classes.total}>
                 Total
               </p>
             </Grid>
-            <Grid item xs={3} >
-              <p className={classes.title} style={{display:'block', marginLeft:'auto', marginRight:'auto'}}>
+            <Grid item xs={6} >
+              <p className={classes.title} style={{display:'block', textAlign:'end', fontWeight:900}}>
                 {Math.abs(parseFloat(props.cart.total).toFixed(2))} DT
               </p></Grid>
           </Grid>
@@ -215,7 +213,7 @@ const useStyles = makeStyles(theme => ({
                  <ArrowBackIosIcon  fontSize='small'/>  Continuer 
                </Button>
             </Link>
-              <Button  href='#' color="primary" variant="outlined" className={classes.link}>
+              <Button  href='/checkout' color="primary" variant="outlined" className={classes.link}>
               Commander  <ArrowForwardIosIcon style={{marginLeft: 10}}/>
             </Button>
           </div>

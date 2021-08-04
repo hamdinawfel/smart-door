@@ -1,52 +1,46 @@
 import {
-    SECCESS_SUBMIT,
-    SET_ERROR,
-    LOADING,
-    GET_LOCATIONS,
-    LOADING_LOCATIONS
-
-    } from './types';
-    
+    GET_ORDER,
+    PLACE_ORDER,
+    SUCCESS_ORDER,
+    FAIL_ORDER,
+    LOADING_ORDER,
+  } from './types';
+      
     const initialState = {
-      loading: false,
-      error: false,
-      success : false,
-      locations : [],
-      loadingLocations: false
+     order:{},
+     title:'',
+     deliveryInfos:[],
+     loading:false,
+     successOrder:false,
+     failOrder:false
     };
-    
-    export default function(state = initialState, action) {
-      switch (action.type) {
-        case LOADING:
-          return {
-            ...state,
-            loading: true
-          };
-        case SECCESS_SUBMIT:
-          return {
-            ...state,
-            success: true,
-            loading: false,
-          };
-        case SET_ERROR:
-          return {
-            ...state,
-            error: true,
-            loading: false,
-          };
-        case LOADING_LOCATIONS:
-          return {
-            ...state,
-            loadingLocation: true,
-          };
-        case GET_LOCATIONS:
-          return {
-            ...state,
-            locations: action.payload,
-            loadingLocations: false,
-          };
-        
-        default:
-          return state;
+      
+      export default function(state = initialState, action) {
+        switch (action.type) {
+          case LOADING_ORDER:
+            return{
+              ...state,
+              loading: true
+            };
+          case GET_ORDER:
+            return{
+              ...state,
+              order: action.payload,
+              title: action.payload.productTitle,
+              deliveryInfos: action.payload.deliveryInfos,
+              loading: false
+            };
+            case SUCCESS_ORDER:
+            return{
+              ...state,
+              successOrder: true
+            };
+            case FAIL_ORDER:
+            return{
+              ...state,
+              failOrder: true
+            };
+          default:
+            return state;
+        }
       }
-    }

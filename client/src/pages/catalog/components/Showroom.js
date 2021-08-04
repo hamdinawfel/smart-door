@@ -133,9 +133,6 @@ const useStyles = makeStyles((theme) => ({
     display:'block',
     justifyContent:'space-around',
     marginTop:'30px',
-    [theme.breakpoints.down('sm')]: {
-        display:'block'
-      },
   },
   dialogBtnContainer:{
    display:'flex',

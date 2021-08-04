@@ -12,6 +12,7 @@ import Home from './pages/home/index';
 import Catalog from './pages/catalog/index';
 import Cart from './pages/cart/index';
 import Profile from './pages/profile/index';
+import Checkout from './pages/checkout/index';
 import Error from './pages/error/index';
 //Feature
 import Activate from './feature/auth/Activate';
@@ -57,7 +58,9 @@ function App() {
                   <Route exact path="/connextion" component={ Auth } />
                   <Route  path="/catalog/:category" component={ Catalog } />
                   <Route exact path="/cart" component={ Cart } />
+                  <Route path="/checkout" component={ Checkout } />
                   <PrivateRoute exact path="/profile/:section" component={ Profile } />
+                  
                 </Switch>
               </div>
           </Router>
@@ -78,7 +81,7 @@ const theme = createMuiTheme({
       white:'#EBEAF0'
     },
     secondary: {
-      main: '#FAE3E3',
+      main: '#1976D2',
     },
   },
 });
