@@ -11,7 +11,7 @@ const app = express()
 const server = http.createServer(app);
 var io = require('socket.io')(server, {
   cors: {
-    origin: ['https://dinarigreenlife.herokuapp.com/','https://dinari-dashboard.netlify.app/'],
+    origin: "*"
   }
 });
 //Load routes
@@ -22,7 +22,6 @@ const productRouter = require("./routes/productRouter");
 const catalogRouter = require("./routes/catalogRouter");
 const orderRouter = require("./routes/orderRouter");
 const adminRouter = require("./routes/adminRouter");
-
 
 app.use(express.json());
 app.use(sslRedirect());
@@ -45,7 +44,6 @@ app.use(cors())
 // upload file middlware -folder
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 
-
 // cors middleware
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*',);
@@ -64,10 +62,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('newOrder', data)
     console.log(data)
   })
-  socket.on('shippingOrder', data =>{
-    socket.broadcast.emit('getOrder', data)
-    console.log(data)
-  })
 })
 // Routes
 
@@ -78,8 +72,6 @@ app.use('/products', productRouter);
 app.use('/catalog', catalogRouter);
 app.use('/orders', orderRouter);
 app.use("/admin", adminRouter);
-
-
 
 // Production set up
 if (process.env.NODE_ENV === 'production') {

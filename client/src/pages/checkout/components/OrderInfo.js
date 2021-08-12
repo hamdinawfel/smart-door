@@ -17,7 +17,7 @@ import Loading from './Loading';
 import { connect } from 'react-redux';
 const ENDPOINT = `${process.env.REACT_APP_SOCKET_IO_ENDPOINT}`; 
 
-const socket = io(ENDPOINT,{ transports: ['websocket', 'polling', 'flashsocket'] });
+const socket = io(ENDPOINT);
 const useStyles = makeStyles((theme) => ({
     root:{
         border: '1px solid rgba(0, 0, 0, .125)',
@@ -116,7 +116,8 @@ function OrderInfo(props) {
       e.preventDefault()
       setLoading(true)
       let products = JSON.parse(localStorage.getItem("addedItems"));
-      e.preventDefault()
+      e.preventDefault();
+      console.log(ENDPOINT)
      const orderData ={
       customerName,
       email,
@@ -125,7 +126,7 @@ function OrderInfo(props) {
       message,
       products
      }
-
+        
       axios.post(`/orders/`, orderData)
       .then(res => {
         socket.emit("placeOrder", 'new');
