@@ -9,7 +9,7 @@ const productRouter = express.Router();
 
 productRouter.route('/')
 .get((req,res,next) => {
-    Products.find().sort({_id : -1})
+    Products.find().sort( { _id: -1 } )
         .then((products) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -20,13 +20,18 @@ productRouter.route('/')
 .post(authenticate.verifyUser, authenticate.verifyAdmin, multer,(req, res, next) => {
   const newProduct = new Products({
     title : req.body.title,
+    reference : req.body.reference,
     description: req.body.description,
+    color: req.body.color,
+    dimensions: req.body.dimensions,
+    material: req.body.material,
+    deliveryMode: req.body.deliveryMode,
     category: req.body.category,
     subCategory: req.body.subCategory,
     alertStock:req.body.alertStock,
     stock:req.body.stock,
     price: req.body.price,
-    imageUrl: `/uploads/${req.file.filename}`
+    imageUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
   });
   newProduct.save()
             .then(category => res.status(200).json(category))
@@ -39,18 +44,6 @@ productRouter.route('/')
 .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403;
     res.end('DELETE operation not supported on /category');
-});
-//COUNT SETUP
-productRouter.route('/count')
-.get(authenticate.verifyUser, authenticate.verifyAdmin,(req,res,next) => {
-    console.log(req.params)
-    Products.aggregate([
-        { $group: { _id: null, productsCount: { $sum: 1 } } },
-        { $project: { _id: 0 } }
-    ], function (err, result) {
-        res.json(result);
-    }).allowDiskUse(true)
-    
 });
 
 // /:productId SETUP

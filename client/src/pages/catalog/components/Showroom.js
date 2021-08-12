@@ -1,5 +1,4 @@
 import React , { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
 //Mui
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,9 +19,6 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-
 //
 import LoadingProducts from './ProductsLoading'
 //redux set up
@@ -82,10 +78,10 @@ const useStyles = makeStyles((theme) => ({
   dialogTitle:{
     fontWeight:600,
     textTransform:'capitalize',
-    marginBottom:30,
+    marginBottom:15,
     [theme.breakpoints.down('sm')]: {
         textAlign:'center',
-        margin:'30px auto'
+        margin:'15px auto'
        },
   },
   price:{
@@ -127,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogContainer:{
-      margin:'50px 0',
+      margin:'5px',
   },
   dialogIconsContainer:{
     display:'block',
@@ -159,6 +155,15 @@ const useStyles = makeStyles((theme) => ({
      color: theme.palette.primary.main
     },
 },
+characteristics:{
+  padding:2,
+  background:'#f5f5f5',
+  marginTop:15,
+},
+feature:{
+  background:'#fff',
+  border:'1px solid #f5f5f5',
+}
 }));
 
 function Showroom(props) {
@@ -239,15 +244,15 @@ function Showroom(props) {
                     >
                     <DialogContent dividers>
                       <Grid container className={classes.dialogContainer}>
-                        <Grid item xs={12} sm={6} style={{display:'flex', justifyContent:'center'}}>
-                          <img src={item.imageUrl } alt={item.title } style={{ width : '80%' }} />
+                        <Grid item xs={12} sm={6} style={{display:'flex', justifyContent:'center',paddingRight:30 }}>
+                          <img src={item.imageUrl } alt={item.title } style={{ width : '100%' }} />
                         </Grid>
                         <Grid  item xs={12} sm={6}>
                           <h3 className={classes.dialogTitle}>{item.title}</h3>
                           <div className={classes.dialogPriceContainer}>
                             <span className={classes.dialogPrice}>{item.price} DT</span>
                           </div>
-                          < DialogContentText id="alert-dialog-slide-description" style={{ margin:'20px 0'}}>
+                          < DialogContentText id="alert-dialog-slide-description" style={{ margin:'15px 0'}}>
                             {item.description }
                           </DialogContentText>
                           <CardActions style={{display:'flex', justifyContent:'space-between'}}>
@@ -264,20 +269,38 @@ function Showroom(props) {
                               <AddBoxIcon fontSize="large" style={{color:'#E82430'}}/>
                               </IconButton>
                           </CardActions>
-                          <div className={classes.dialogIconsContainer}>
-                          <div style={{ display:'flex',justifyContent:'start', alignItems:'center'}}>
-                            <LocalShippingIcon fontSize="small" style={{ color: '#008000', marginRight : 10, marginTop:-10}}/>
-                            <DialogContentText style={{ fontSize:15}}>
-                               Livraison gratuit
-                            </DialogContentText>
-                          </div>
-                          <div style={{ display:'flex',justifyContent:'start', alignItems:'center'}}>
-                            <AccountBalanceWalletIcon fontSize="small" style={{ color: '#008000', marginRight : 10, marginTop:-10}}/>
-                            <DialogContentText style={{ fontSize:15}}>
-                               Paiement à la livraison
-                            </DialogContentText>
-                          </div>
-                      </div>
+                          <Grid container className={classes.characteristics}>
+                             <Grid item xs={4} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Dimensions</DialogContentText>
+                             </Grid>
+                             <Grid item xs={8} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.dimensions}</DialogContentText>
+                             </Grid>
+                             <Grid item xs={4} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Couleur</DialogContentText>
+                             </Grid>
+                             <Grid item xs={8} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.color}</DialogContentText>
+                             </Grid>
+                             <Grid item xs={4} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Matériaux</DialogContentText>
+                             </Grid>
+                             <Grid item xs={8} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.material}</DialogContentText>
+                             </Grid>
+                             <Grid item xs={4} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Livraison</DialogContentText>
+                             </Grid>
+                             <Grid item xs={8} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.deliveryMode}</DialogContentText>
+                             </Grid>
+                             <Grid item xs={4} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Paiement</DialogContentText>
+                             </Grid>
+                             <Grid item xs={8} className={classes.feature}>
+                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Paiement à la livraison</DialogContentText>
+                             </Grid>
+                          </Grid>
                         </Grid>
                       </Grid>
                       

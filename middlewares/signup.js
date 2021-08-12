@@ -21,7 +21,7 @@ module.exports = function validateSignupInput(data) {
     errors.password = "Veuillez remplir ce champ";
   }
 if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
-    errors.password = "Weak Password";
+    errors.password = "Mot de passe faible";
   }
 
 return {

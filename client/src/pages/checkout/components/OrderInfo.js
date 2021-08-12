@@ -1,6 +1,8 @@
-import React , { useState, useEffect} from 'react'
+import React , { useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/material.css'
+import io from 'socket.io-client';
+import axios from 'axios';
 //MUI
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -10,10 +12,12 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 //
-
+import Loading from './Loading';
 //redux
 import { connect } from 'react-redux';
+const ENDPOINT = `${process.env.REACT_APP_SOCKET_IO_ENDPOINT}`; 
 
+const socket = io(ENDPOINT,{ transports: ['websocket', 'polling', 'flashsocket'] });
 const useStyles = makeStyles((theme) => ({
     root:{
         border: '1px solid rgba(0, 0, 0, .125)',
@@ -94,46 +98,62 @@ const useStyles = makeStyles((theme) => ({
 
 function OrderInfo(props) {
   const classes = useStyles();
-  const [ name, setName] = useState('');
+  const [ customerName, setCustomerName] = useState('');
   const [ email, setEmail] = useState('');
   const [ adress, setAdress] = useState('');
   const [ phone, setPhone] = useState('');
   const [ message, setMessage] = useState('');
   const [ open, setOpen] = useState(false);
-  const handleSubmit = (e) => {
-     e.preventDefault()
-     const orderData ={
-      name,
-      email,
-      phone,
-      adress,
-      message
-     }
-   setOpen(true)
-  }
+
   const handleClose = ()  => {
     localStorage.removeItem('count');
     localStorage.removeItem('total');
     localStorage.removeItem('addedItems');
   }
+
+  const [loading, setLoading] = useState(false)
+    const handlePlaceOrder = (e) =>{
+      e.preventDefault()
+      setLoading(true)
+      let products = JSON.parse(localStorage.getItem("addedItems"));
+      e.preventDefault()
+     const orderData ={
+      customerName,
+      email,
+      phone,
+      adress,
+      message,
+      products
+     }
+
+      axios.post(`/orders/`, orderData)
+      .then(res => {
+        socket.emit("placeOrder", 'new');
+        setOpen(true);
+        setLoading(false);
+        localStorage.removeItem('count');
+        localStorage.removeItem('total');
+        localStorage.removeItem('addedItems');
+      })
+    }
     return (
         <Grid container className={classes.root}>
             <Grid item xs={12} className={classes.titleContainer}>
               <Typography className={classes.title}>Informations</Typography>
             </Grid>
             <Grid item xs={12} >
-            <form onSubmit={handleSubmit}style={{padding:'30px 0'}}>
+            <form onSubmit={handlePlaceOrder}style={{padding:'30px 0'}}>
                   <div className={classes.field}>
                     <TextField
                         required
                         color="secondary"
                         style={{width:'300px'}}
-                        name="first name"
+                        name="name"
                         label="Nom et Prénom"
                         placeholder="Entrer votre Nom et Prénon"
                         variant="outlined"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
+                        value={customerName}
+                        onChange={e => setCustomerName(e.target.value)}
                         />
                   </div>
                   <div className={classes.field}>
@@ -141,8 +161,9 @@ function OrderInfo(props) {
                         required
                         style={{width:'300px'}}
                         color="secondary"
-                        name="Email"
-                        label="Eamil"
+                        name="email"
+                        type="email"
+                        label="Email"
                         placeholder="Entrer votre Email"
                         variant="outlined"
                         value={email}
@@ -167,8 +188,9 @@ function OrderInfo(props) {
                           masks={{
                             tn: ".. ... ...",
                           }}
-                        style={{width:'100%'}}
+                        style={{width:'100%'}}s
                         inputProps={{
+                          name: 'phone',
                           required: true,
                         }}
                           country={'tn'}
@@ -192,8 +214,8 @@ function OrderInfo(props) {
                         />
                   </div>
                   <div style={{position:'relative', zIndex:0}}>
-                    <Button className={classes.myButton} type="submit">
-                    Commander  
+                    <Button disabled={loading} className={classes.myButton} type="submit">
+                      {loading?<Loading />:'Commandez'}
                     </Button>
                   </div>
                 </form>

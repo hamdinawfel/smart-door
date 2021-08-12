@@ -15,25 +15,25 @@ var productSchema = new Schema({
         type: Number,
         required: true,
     },
-    purchasePrice : {
-        type: Number,
+    title : {
+        type: String,
         required: true,
     },
-    title : {
+    reference : {
         type: String,
         required: true,
     },
 });
 const orderSchema = new Schema({
-    user:  { 
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
     customerName : {
         type: String,
         required: true,
     },
-    city : {
+    orderNumber : {
+        type: String,
+        required: false,
+    },
+    email : {
         type: String,
         required: true,
     },
@@ -44,6 +44,10 @@ const orderSchema = new Schema({
     phone : {
         type: String,
         required: true,
+    },
+    message : {
+        type: String,
+        required: false,
     },
     products: [ productSchema ],
     total: {

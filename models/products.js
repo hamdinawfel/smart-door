@@ -6,9 +6,29 @@ const productSchema = new Schema({
         type: String,
         required: true,
     },
+    reference: {
+        type: String,
+        required: true,
+    },
     description: {
         type: String,
         required: true
+    },
+    color: {
+        type: String,
+        required: false
+    },
+    dimensions: {
+        type: String,
+        required: false
+    },
+    material: {
+        type: String,
+        required: false
+    },
+    deliveryMode: {
+        type: String,
+        required: false
     },
     imageUrl: {
         type: String,
