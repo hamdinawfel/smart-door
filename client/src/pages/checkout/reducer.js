@@ -1,6 +1,5 @@
 import {
     GET_ORDER,
-    PLACE_ORDER,
     SUCCESS_ORDER,
     FAIL_ORDER,
     LOADING_ORDER,

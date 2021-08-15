@@ -282,10 +282,10 @@ function Catalog(props) {
   }, []);
 
   
-  const handleClick = (expanded) => {
-    setOpenCategory(!openCategory);
-    setExpanded(expanded);
-  };
+  // const handleClick = (expanded) => {
+  //   setOpenCategory(!openCategory);
+  //   setExpanded(expanded);
+  // };
   
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -473,7 +473,7 @@ function Catalog(props) {
          <Showroom />
       </main>
     </div>
-    <<Chat />
+    <Chat />
     <Footer />
     </React.Fragment>
   );

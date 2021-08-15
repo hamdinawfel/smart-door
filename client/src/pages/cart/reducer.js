@@ -1,9 +1,7 @@
 import {
     ADD_TO_CART,
     SUB_QUANTITY,
-    REMOVE_ITEM,
     GET_CART,
-    SET_ERROR,
   
     } from './types';
     
@@ -11,7 +9,6 @@ import {
       addedItems: [],
       total: 0,
       count: 0,
-      error:false,
     };
     
     export default function(state = initialState, action) {
@@ -114,11 +111,6 @@ import {
               addedItems:inCartItems !== null?inCartItems:[],
                total:cartTotal !== NaN?cartTotal:0,
                count: cartCount ?  cartCount:0
-            };
-          case SET_ERROR:
-            return {
-              ...state,
-              error: true
             };
         default:
           return state;

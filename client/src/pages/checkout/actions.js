@@ -1,14 +1,9 @@
 import {
     GET_ORDER,
-    PLACE_ORDER,
     CREATE_ORDER,
-    SUCCESS_ORDER,
-    FAIL_ORDER,
-    LOADING_ORDER,
     ADD_QANTITY,
     SUB_QUANTITY
    } from './types';
-  import axios from 'axios';
   
   export const getOrder = ()=> {
     let order = JSON.parse(localStorage.getItem("newOrder"));
