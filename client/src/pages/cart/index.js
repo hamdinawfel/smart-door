@@ -12,18 +12,18 @@ import Link from '@material-ui/core/Link';
 //Icons
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
-import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 //Utils
 import Title from '../../utils/Title'
 import Footer from '../../utils/footer/index'
 import Navbar from '../../utils/navbar/index'
+import Chat from '../../utils/Chat'
 //assets
 import empty from './assets/empty.svg'
 //Redux
 import { connect } from 'react-redux';
-import {getCart, addToCart, subQuantity,} from './actions';
+import {getCart, addToCart, subQuantity} from './actions';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -69,7 +69,7 @@ const useStyles = makeStyles(theme => ({
       title:{
         fontWeight:600,
         color:'rgba(0,0,0,0.5)',
-        fontSize:22,
+        fontSize:18,
         marginLeft:20,
         display:'flex',
         [theme.breakpoints.down('sm')]: {
@@ -224,25 +224,25 @@ const useStyles = makeStyles(theme => ({
               <img src={empty} alt="Pannier vide" className={classes.emptyImage}/>
               <Link href='/catalog/showroom' style={{textDecoration:'none'}}>
                 <Button className={classes.myButton}>
-                  Voir Nos catalogue
+                  Voir Notre catalogue
                 </Button>
               </Link> 
            </div>
             }
           </div>
+           <Chat />
            <Footer />
         </div>
       
     )
 }
 const mapStateToProps = (state) => ({
-    cart: state.cart,
+    cart: state.cart
   });
   const mapActionsToProps = {
     getCart,
     addToCart,
     subQuantity,
-    // removeItem
   };
   export default connect(
     mapStateToProps,

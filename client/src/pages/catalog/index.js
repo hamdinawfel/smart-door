@@ -12,32 +12,30 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Chip from '@material-ui/core/Chip';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
 import Collapse from '@material-ui/core/Collapse';
-
+import Button from '@material-ui/core/Button';
 //MUI ICONS
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
-import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
-import DoneIcon from '@material-ui/icons/Done';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 // components
 import Skeleton from '../home/components/Skeleton'
 //utils
 import Navbar from '../../utils/navbar/index'
 import Footer from '../../utils/footer/index'
+import Chat from '../../utils/Chat'
+
 //redux set up
 import { connect } from 'react-redux';
 import { getCategories, getShowcaseProducts, getByCategory, getBySubCategory} from './actions'
 import Showroom from './components/Showroom';
 
-const drawerWidth = 260;
+const drawerWidth = 270;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -134,29 +132,117 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },// 
-  activeCategory:{
-    backgroundColor:'#606060',
-    color:'#fff'
-  },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: 5,
-  },
-  category:{
+  categoryIndicator:{
     textTransform:'uppercase',
     fontSize:20,
     [theme.breakpoints.down('sm')]: {
-      fontSize:12,
+      fontSize:16,
     },
   },
-  subCategory:{
+  subCategoryIndicator:{
     textTransform:'uppercase',
     fontSize:18,
     [theme.breakpoints.down('sm')]: {
-      fontSize:10,
+      fontSize:14,
     },
-  }
+  },
+  closeButton: {
+    position: 'absolute',
+    left: theme.spacing(1),
+    top: 5,
+  },
+ category:{
+    borderTop:'1px solid #eee',
+    borderLeft:'1px solid #eee',
+    borderBottom:'1px solid #eee',
+    borderTopRightRadius:0,
+    borderBottomRightRadius:0,
+    borderRadius:30,
+    margin:'10px 0'
+  },
+  activeCategory:{
+    background: 'linear-gradient(90deg, rgba(232, 36, 48, 0.1) 0%, rgba(255,255,255,0.6923144257703081) 100%)',
+    borderTop:'1px solid #eee',
+    borderLeft:'1px solid #eee',
+    borderBottom:'1px solid #eee',
+    borderTopRightRadius:0,
+    borderBottomRightRadius:0,
+    borderRadius:30,
+    margin:'10px 0',
+    marginLeft:10,
+    transition: '0.5s',
+  },
+   subCategory:{
+    textTransform:'uppercase',
+    borderTop:'1px solid #eee',
+    borderLeft:'1px solid #eee',
+    borderBottom:'1px solid #eee',
+    borderTopRightRadius:0,
+    borderBottomRightRadius:0,
+    borderRadius:30,
+    marginBottom:3,
+    padding:'0 0 0 5px',
+    marginLeft:10,
+
+  },
+  activeSubCategory:{
+    textTransform:'uppercase',
+    background: 'linear-gradient(90deg, rgba(232, 36, 48, 0.1) 0%, rgba(255,255,255,0.6923144257703081) 100%)',
+    borderTop:'1px solid #eee',
+    borderLeft:'1px solid #eee',
+    borderBottom:'1px solid #eee',
+    borderTopRightRadius:0,
+    borderBottomRightRadius:0,
+    borderRadius:30,
+    marginBottom:3,
+    padding:'0 0 0 5px',
+    marginLeft:20,
+    transition: '0.5s',
+  }, 
+  filterBtn:{
+    background:theme.palette.primary.main,
+    color:'#fff',
+    display:'block',
+    marginLeft:'auto',
+    marginRight:'auto',
+    width:'80%',
+    bottom:10,
+  },
+  phoneActiveSubCategory:{
+    textTransform:'uppercase',
+    background: 'linear-gradient(90deg, rgba(232, 36, 48, 0.1) 0%, rgba(255,255,255,0.6923144257703081) 100%)',
+    border:'1px solid #eee',
+    margin:'5px 20px',
+    width:'80%',
+    marginLeft:40,
+    borderRadius:30,
+    padding:'0 0 0 5px',
+    transition: '0.5s',
+  }, 
+  phoneCategory:{
+    margin:'5px 10px',
+    borderRadius:30,
+    border:'1px solid #eee',
+    width:'90%',
+    transition:'0.5s'
+  },
+   phoneActiveCategory:{
+    background: 'linear-gradient(90deg, rgba(232, 36, 48, 0.1) 0%, rgba(255,255,255,0.6923144257703081) 100%)',
+    border:'1px solid #eee',
+    borderRadius:30,
+    margin:'5px 30px',
+    width:'90%',
+    transition:'0.5s'
+  },
+  phoneSubCategory:{
+    textTransform:'uppercase',
+    border:'1px solid #eee',
+    margin:'5px 20px',
+    borderRadius:30,
+    width:'80%',
+    padding:'0 0 0 5px',
+    transition: '0.5s',
+  },
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -173,7 +259,6 @@ function Catalog(props) {
   const [ activeCategory, setActiveCategory ] = React.useState('');
   const [ activeSubCategory, setActiveSubCategory ] = React.useState('');
   const [openCategory, setOpenCategory] = React.useState(false);
-  const [expanded, setExpanded] = React.useState('');
 
   
   useEffect(() => {
@@ -215,22 +300,24 @@ function Catalog(props) {
     const sort=1;
     const limit =18;
     props.getShowcaseProducts(sort,limit);
-    setOpenPhoneFilter(false);
     setActiveCategory('SHOWROOM');
     setActiveSubCategory('');
+    window.scrollTo(0, 0);
+
   }
   
   const handleGetByCategory = (category) =>{
     props.getByCategory(category)
     setActiveCategory(category);
     setActiveSubCategory('');
-    setOpenPhoneFilter(false);
+    window.scrollTo(0, 0);
+
   }
   const handleGetBySubCategory = (category, subCategory) =>{
     props.getBySubCategory(subCategory)
     setActiveCategory(category);
     setActiveSubCategory(subCategory);
-    setOpenPhoneFilter(false);
+    window.scrollTo(0, 0);
   }
  
   return (
@@ -258,13 +345,13 @@ function Catalog(props) {
             <FilterListIcon />
           </IconButton>
           <div style={{display:'flex',alignItems:'center'}}>
-            <Typography variant="h6" className={classes.category}>
+            <Typography variant="h6" className={classes.categoryIndicator}>
                 {activeCategory}
               </Typography>
            {activeSubCategory !== ''?
             <div style={{display:'flex',alignItems:'center'}}>
               <ChevronRightIcon style={{ verticalAlign:'top'}}/>
-              <Typography variant="h6" className={classes.subCategory}>
+              <Typography variant="h6" className={classes.subCategoryIndicator}>
                 {activeSubCategory}
               </Typography>
             </div>:null}
@@ -274,7 +361,6 @@ function Catalog(props) {
       </AppBar>
       <Drawer
         className={classes.drawer}
-        variant="persistent"
         variant="persistent"
         anchor="left"
         open={open}
@@ -293,34 +379,31 @@ function Catalog(props) {
         </div>
         <Divider />
           <Typography variant="h6" style={{ margin:'10px 20px'}}>
-             Toutes les categories
+             Choisir une catégorie
           </Typography>
-        <List>
+        <List style={{marginLeft:10 }}>
            { props.catalog.loadingCategories?
               <Skeleton />
            :
            <React.Fragment>
-             <ListItem button onClick={handleGetShowcaseProducts}>
+             <ListItem button onClick={handleGetShowcaseProducts} className={activeCategory === 'SHOWROOM'?classes.activeCategory:classes.category}>
                   <ListItemText primary='SHOWROOM' style={{textTransform:'capitalize'}}/>
               </ListItem>
               {props.catalog.categories.map(item =>
               <div key={item._id}>
-                <ListItem button >
+                <ListItem button className={activeCategory === item.name?classes.activeCategory:classes.category}>
                   <ListItemText primary={item.name} style={{textTransform:'capitalize'}} onClick={()=>handleGetByCategory(item.name)}/>
-                  {openCategory && expanded === item._id? <UnfoldLessIcon className={classes.icon} onClick={()=>handleClick(item._id)}/> : <UnfoldMoreIcon className={classes.icon} onClick={()=>handleClick(item._id)}/>}
                 </ListItem>
-                <Collapse in={openCategory && expanded === item._id} timeout="auto" unmountOnExit>
+                <Collapse in={true} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                       {item.subCategories.map(element =>
-                      <Chip
+                        <ListItem 
                           key={element}
-                          onClick={()=>handleGetBySubCategory(item.name, element)}
-                          style={{textTransform:'capitalize', margin:'5px', width:'90%'}}
-                          label={element}
-                          onDelete={()=>console.log('')}
-                          deleteIcon={<DoneIcon  style={{ display:element ===activeSubCategory?'flex':'none', float:'right'}}/>}
-                          variant="outlined"
-                        />)}
+                          button className={activeSubCategory === element?classes.activeSubCategory:classes.subCategory}
+                          onClick={()=>handleGetBySubCategory(item.name, element)}>
+                        <ListItemText secondary={element} style={{textTransform:'uppercase'}}/>
+                      </ListItem>
+                        )}
                   </List>
                 </Collapse>
               </div>)}
@@ -335,50 +418,51 @@ function Catalog(props) {
         aria-labelledby="responsive-dialog-title"
       >
         <div className={classes.filterHeader}>
-         <Typography variant="h6">
+        
+        <IconButton aria-label="close" className={classes.closeButton} onClick={handleDrawerClose}>
+            <ArrowBackIcon />
+        </IconButton>
+        <Typography variant="h6">
           filter
           </Typography>
         </div>
-        <IconButton aria-label="close" className={classes.closeButton} onClick={handleDrawerClose}>
-            <ArrowForwardIcon />
-        </IconButton>
-        
         <Divider />
         <Typography variant="h6" style={{ margin:'10px 20px'}}>
-           Toutes les categories
+             Choisir une catégorie
           </Typography>
-        <List>
+        <List style={{marginBottom:100}}>
         { props.catalog.loadingCategories?
               <Skeleton />
            :
            <React.Fragment>
-               <ListItem button onClick={handleGetShowcaseProducts}>
+               <ListItem button onClick={handleGetShowcaseProducts} className={activeCategory === 'SHOWROOM'?classes.phoneActiveCategory:classes.phoneCategory}>
                   <ListItemText primary='SHOWROOM' style={{textTransform:'capitalize'}}/>
               </ListItem>
               {props.catalog.categories.map(item =>
               <div key={item._id}>
-                <ListItem button >
+                <ListItem button className={activeCategory === item.name?classes.phoneActiveCategory:classes.phoneCategory}>
                   <ListItemText primary={item.name} style={{textTransform:'capitalize'}} onClick={()=>handleGetByCategory(item.name)}/>
-                  {openCategory && expanded === item._id? <UnfoldLessIcon className={classes.icon} onClick={()=>handleClick(item._id)}/> : <UnfoldMoreIcon className={classes.icon} onClick={()=>handleClick(item._id)}/>}
+                  {/* {openCategory && expanded === item._id? <UnfoldLessIcon className={classes.icon} onClick={()=>handleClick(item._id)}/> : <UnfoldMoreIcon className={classes.icon} onClick={()=>handleClick(item._id)}/>} */}
                 </ListItem>
-                <Collapse in={openCategory && expanded === item._id} timeout="auto" unmountOnExit>
+                <Collapse in={true} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {item.subCategories.map(element =>
-                      <Chip
-                      key={element}
-                      clickable
-                      onClick={()=>handleGetBySubCategory(item.name, element)}
-                      style={{textTransform:'capitalize', margin:'5px', width:'90%'}}
-                      label={element}
-                      onDelete={()=>console.log('')}
-                      deleteIcon={<DoneIcon  style={{ display:element ===activeSubCategory?'flex':'none', float:'right'}}/>}
-                      variant="outlined"
-                    />)}
+                    <ListItem 
+                        key={element}
+                        button
+                        onClick={()=>handleGetBySubCategory(item.name,element)}
+                        className={activeSubCategory === element?classes.phoneActiveSubCategory:classes.phoneSubCategory} >
+                      <ListItemText secondary={element}/>
+                    </ListItem>
+                    )}
                   </List>
                 </Collapse>
               </div>)}
            </React.Fragment>}
         </List>
+        <div style={{display:'flex', justifyContent:'center',alignItems:'center', background:'#fff', padding:'20px 0 0 0', position:'fixed', bottom:0, width:'100%'}}>
+          <Button onClick={()=>setOpenPhoneFilter(false)} className={classes.filterBtn}>Appliquer</Button>
+        </div>
       </Dialog>
       <main
         className={clsx(classes.content, {
@@ -389,6 +473,7 @@ function Catalog(props) {
          <Showroom />
       </main>
     </div>
+    <<Chat />
     <Footer />
     </React.Fragment>
   );

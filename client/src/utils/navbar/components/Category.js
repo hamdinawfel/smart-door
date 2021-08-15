@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius:0,
         fontSize:15,
         fontWeight:300,
-        margin:'0 10px',
+        margin:'0 6px',
         background: `rgba(232, 36, 48, 0.1)`,
         color: '#000',
         minWidth:200,
@@ -55,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
       paddingBlock:0
     }
   }));
+
+
   function ItemCard(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -143,7 +145,7 @@ function Category(props) {
            null
           :
           <React.Fragment>
-            {props.catalog.categories.map(item =>
+            {props.catalog.categories.slice(0, 5).map(item =>
                <ItemCard 
                   key={item._id}
                   name={item.name} 

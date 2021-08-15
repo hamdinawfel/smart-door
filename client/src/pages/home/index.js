@@ -16,6 +16,7 @@ import Navbar from '../../utils/navbar/index';
 import Footer from '../../utils/footer/index'
 import NewsLetter from '../../utils/subscribe/index';
 import Title from '../../utils/Title'
+import Chat from '../../utils/Chat'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +69,7 @@ export default function Index(props) {
         <Testimonial />
         <CommonQuestions />
         <NewsLetter />
+        <Chat />
       <ScrollTop {...props}>
         <Fab color="primary" size="small" aria-label="scroll back to top">
           <KeyboardArrowUpIcon style={{ color:'#fff'}}/>

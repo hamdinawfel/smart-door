@@ -65,7 +65,7 @@ categoryRouter.route('/:categoryId')
     res.statusCode = 403;
     res.end('POST operation not supported on /category/'+ req.params.categoryId);
 })
-.put(authenticate.verifyUser, authenticate.verifyAdmin,multer, (req, res, next) => {
+.put(authenticate.verifyUser, authenticate.verifyAdmin, multer, (req, res, next) => {
     if(req.file)
     {
         Categories.findById(req.params.categoryId)
@@ -75,25 +75,62 @@ categoryRouter.route('/:categoryId')
                 name: req.body.name,
                 title: req.body.title,
                 caption: req.body.caption,
-                imageUrl: `/uploads/${req.file.filename}`
+                imageUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
             }
             fs.unlink(`uploads/${filename}`, () => {
                 Categories.updateOne({ _id: req.params.categoryId }, { ...categoryUpdated, _id: req.params.categoryId })
-                .then(() => res.status(200).json({ message: 'Category modifié !'}))
+                .then((resp) => {
+                    Products.find({category: category.name})
+                        .then((products) => {
+                            if(products.length !== 0){
+                                products.forEach(element => {
+                                element.category = req.body.name
+                                element.save()
+                                .then((product) => {
+                                    res.status(200).json({ message: 'Category modifié !'})
+                                })
+                                .catch((err) => next(err)); 
+                            })
+                            }else{
+                            res.status(200).json({ message: 'Category modifié !'})
+                            }
+                        })
+                })
                 .catch(err => console.log(err));
             })
         })
         .catch(err=> res.status(400).json({ error: err }));
     
     }else {
-        const categoryUpdated = {
+        //
+        Categories.findById(req.params.categoryId)
+        .then((category) => {
+           const categoryUpdated = {
             name: req.body.name,
             title: req.body.title,
             caption: req.body.caption,
         }
         Categories.updateOne({ _id: req.params.categoryId }, { ...categoryUpdated, _id: req.params.categoryId })
-        .then(() => res.status(200).json({ message: 'Category modifié !'}))
+        .then((resp) => {
+            Products.find({category: category.name})
+                .then((products) => {
+                    if(products.length !== 0){
+                        products.forEach(element => {
+                        element.category = req.body.name
+                        element.save()
+                        .then((product) => {
+                            res.status(200).json({ message: 'Category modifié !'})
+                        })
+                        .catch((err) => next(err)); 
+                    })
+                    }else{
+                    res.status(200).json({ message: 'Category modifié !'})
+                    }
+            })
+        })
         .catch(error => res.status(400).json({ error }));
+        })
+        .catch(err=> res.status(400).json({ error: err }));
     }
 })
 .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
@@ -105,7 +142,7 @@ categoryRouter.route('/:categoryId')
                 .then((resp)=> {
                     Products.find({ category: category.name})
                      .then((products)=>{
-                         if( products.length >0){
+                         if( products.length !== 0){
                             products.forEach(element => {
                             const image = element.imageUrl.split('/uploads/')[1];
                                 fs.unlink(`uploads/${image}`, () => {
@@ -123,6 +160,7 @@ categoryRouter.route('/:categoryId')
                                 message: 'category deleted!'
                               })
                          }
+                        console.log(category)
                      })
                      .catch((err) => res.status(500).json({error :err})); 
                 })
@@ -183,14 +221,18 @@ categoryRouter.route('/:categoryId/subcategories')
             .then((category) => {
                 Products.find({subCategory: req.body.oldSubCategory})
                 .then((products) => {
-                    products.forEach(element => {
+                    if(products.length !== 0){
+                        products.forEach(element => {
                         element.subCategory = req.body.newSubCategory
                         element.save()
                         .then((product) => {
                             res.status(200).json({result:"Subcategory and products updated successfully"})
                         })
                         .catch((err) => next(err)); 
-                    })
+                      })
+                    }else{
+                      res.status(200).json({result:"Subcategory and products updated successfully"})
+                    }
                 })
             .catch((err) => res.status(500).json({error :err}));
             })
@@ -210,7 +252,7 @@ categoryRouter.route('/:categoryId/subcategories')
             //
             Products.find({subCategory: req.query.subCategory})
             .then((products) => {
-              if(products.length >0){
+              if(products.length !==0){
                 products.forEach(element => {
                     const filename = element.imageUrl.split('/uploads/')[1];
                    fs.unlink(`uploads/${filename}`, () => {

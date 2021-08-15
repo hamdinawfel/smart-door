@@ -12,6 +12,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 //Icons
@@ -21,6 +23,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 //
 import LoadingProducts from '../../catalog/components/ProductsLoading'
 //redux set up
@@ -38,15 +42,15 @@ const useStyles = makeStyles((theme) => ({
  },
   card: {
     height: '100%',
-    margin:'10px 10px',
+    margin:'15px',
     display: 'flex',
     flexDirection: 'column',
+     [theme.breakpoints.down('xs')]: {
+       margin:'15px 0',
+    },
   },
   cardMedia: {
-    paddingTop: '70.25%', // 16:9
-    objectFit: 'cover',
-    backgroundSize: '60% auto',
-
+    paddingTop: '70.25%',
     transition: 'all 0.5s ease',
     '&:hover': {
       transform : 'scale(1.1)',
@@ -78,11 +82,11 @@ const useStyles = makeStyles((theme) => ({
     color:'#000'
   },
   title:{
-    fontWeight:600,
-    textTransform:'capitalize',
+   fontWeight:300,
+    textTransform:'uppercase',
     '&:hover': {
         cursor:'pointer',
-        color:'#008000'
+        color:theme.palette.primary.main
      },
   },
   dialogTitle:{
@@ -96,11 +100,9 @@ const useStyles = makeStyles((theme) => ({
   },
   price:{
     float:'right',
+    fontSize:'1.1rem',
     fontWeight:600,
-    color: '#008000',
-    border: `1px solid #9ef01a`,
-    padding: 5,
-    borderRadius:'5px',
+    color: '#fff',
   },
   dialogPrice:{
     fontWeight:600,
@@ -168,11 +170,34 @@ const useStyles = makeStyles((theme) => ({
 characteristics:{
   padding:2,
   background:'#f5f5f5',
-  marginTop:15,
+  marginTop:25,
 },
 feature:{
   background:'#fff',
   border:'1px solid #f5f5f5',
+  display:'flex',
+  alignItems:'center',
+  padding:'0 5px'
+},
+topTitleBar:{
+  height:40,
+  width:120,
+  display:'flex',
+  justifyContent:'start',
+  padding:0,
+  background:'inherit',
+  
+},
+  bottomTitleBar:{
+      width:'100%',
+       background:
+      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+  },
+cardIcon:{
+   transition: 'all 0.5s ease',
+  '&:hover': {
+      color:'#fff'
+  },
 }
 }));
 
@@ -214,13 +239,54 @@ function Showroom(props) {
                {props.catalog.products.map(item => 
                  <Grid item key={item._id} xs={12} sm={6} md={4} style={{ marginTop:20}}>
                     <Card className={classes.card} elevation={3}>
-                    <CardMedia
-                         onClick={()=>handleClickOpen(item._id)}
-                        className={classes.cardMedia}
-                        image={item.imageUrl}
-                        title={item.name}
-                        
-                    />                  
+                    <GridListTile style={{listStyle:'none'}}>
+                        <CardMedia
+                          onClick={()=>handleClickOpen(item._id)}
+                          className={classes.cardMedia}
+                          image={item.imageUrl}
+                          title={item.name}
+                      /> 
+                      <GridListTileBar
+                          titlePosition="bottom"
+                          title={
+                          <Grid container>
+                              <Grid item xs={8}>
+                              <Typography onClick={()=>handleClickOpen(item._id)} className={classes.title}>
+                              {item.title} 
+                              </Typography>
+                              </Grid>
+                              <Grid item xs={4}>
+                              <Typography className={classes.price}>
+                                  {item.price} <span style={{fontSize:12}}>DT</span>
+                              </Typography>
+                              </Grid>
+                          </Grid>
+                          }
+                          classes={{
+                            root: classes.bottomTitleBar,
+                          }}
+                        />
+                      <GridListTileBar
+                          titlePosition="top"
+                          title={
+                           <div>
+                              <IconButton size="small" onClick={()=>handleClickOpen(item._id)}>
+                                 <VisibilityIcon fontSize="small" className={classes.cardIcon}/>
+                              </IconButton>
+                               { props.cart.addedItems.findIndex(el => el._id === item._id) !== -1 ?
+                                <Link href="/cart">
+                                    <IconButton size="small">
+                                      <ShoppingCartIcon fontSize="small" className={classes.cardIcon}/>
+                                    </IconButton>
+                               </Link>
+                               :null}
+                           </div>
+                          }
+                          classes={{
+                            root: classes.topTitleBar,
+                          }}
+                        />
+                      </GridListTile>              
                     <CardActions style={{display:'flex', justifyContent:'space-between'}}>
                         <IconButton sise="small" onClick={()=>handleSubQuantity(item)} disabled={props.cart.addedItems.findIndex(el => el._id === item._id) === -1}>
                         <IndeterminateCheckBoxIcon fontSize="large" style={{opacity:0.5}} />
@@ -235,18 +301,6 @@ function Showroom(props) {
                         <AddBoxIcon fontSize="large" style={{color:'#E82430'}}/>
                         </IconButton>
                     </CardActions>
-                    <Grid container style={{padding:10}}>
-                        <Grid item xs={8}>
-                        <Typography onClick={()=>handleClickOpen(item._id)} className={classes.title}>
-                        {item.title} 
-                        </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                        <Typography className={classes.price}>
-                            {item.price}{' DT'}
-                        </Typography>
-                        </Grid>
-                    </Grid>
                     </Card>
                     <Dialog
                        open={open && item._id === selected}
@@ -284,35 +338,35 @@ function Showroom(props) {
                               </IconButton>
                           </CardActions>
                           <Grid container className={classes.characteristics}>
-                             <Grid item xs={4} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Dimensions</DialogContentText>
+                             <Grid item xs={6} sm={4} className={classes.feature}>
+                                <DialogContentText>Dimensions</DialogContentText>
                              </Grid>
-                             <Grid item xs={8} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.dimensions}</DialogContentText>
+                             <Grid item xs={6} sm={8} className={classes.feature}>
+                                <DialogContentText>{item.dimensions}</DialogContentText>
                              </Grid>
-                             <Grid item xs={4} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Couleur</DialogContentText>
+                             <Grid item  xs={6} sm={4} className={classes.feature}>
+                                <DialogContentText>Couleur</DialogContentText>
                              </Grid>
-                             <Grid item xs={8} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.color}</DialogContentText>
+                             <Grid item  xs={6} sm={8} className={classes.feature}>
+                                <DialogContentText>{item.color}</DialogContentText>
                              </Grid>
-                             <Grid item xs={4} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Matériaux</DialogContentText>
+                             <Grid item  xs={6} sm={4} className={classes.feature}>
+                                <DialogContentText>Matériaux</DialogContentText>
                              </Grid>
-                             <Grid item xs={8} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.material}</DialogContentText>
+                             <Grid item xs={6} sm={8} className={classes.feature}>
+                                <DialogContentText>{item.material}</DialogContentText>
                              </Grid>
-                             <Grid item xs={4} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Livraison</DialogContentText>
+                             <Grid item xs={6} sm={4} className={classes.feature}>
+                                <DialogContentText>Livraison</DialogContentText>
                              </Grid>
-                             <Grid item xs={8} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>{item.deliveryMode}</DialogContentText>
+                             <Grid item xs={6} sm={8} className={classes.feature}>
+                                <DialogContentText>{item.deliveryMode}</DialogContentText>
                              </Grid>
-                             <Grid item xs={4} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}>Paiement</DialogContentText>
+                             <Grid item xs={6} sm={4} className={classes.feature}>
+                                <DialogContentText>Paiement</DialogContentText>
                              </Grid>
-                             <Grid item xs={8} className={classes.feature}>
-                                <DialogContentText style={{padding:0, margin:'2px 5px 2px 5px'}}> Paiement à la livraison</DialogContentText>
+                             <Grid item xs={6} sm={8} className={classes.feature}>
+                                <DialogContentText> Paiement à la livraison</DialogContentText>
                              </Grid>
                           </Grid>
                         </Grid>

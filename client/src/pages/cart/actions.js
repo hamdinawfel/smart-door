@@ -4,7 +4,6 @@ import {
     REMOVE_ITEM,
     CLEAR_ALL,
     GET_CART,
-    SET_ERROR,
     } from './types';
      
       // ADD TO CART

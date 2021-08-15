@@ -20,6 +20,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
  //Components
 import PhoneNavbar from './components/PhoneNavbar'
 import Category from './components/Category'
+// import Category from './components/Category2'
  //logo
 import logo from './assets/logo.jpg'
 //Redux
@@ -195,7 +196,7 @@ function Navbar(props) {
       </HideOnScroll>
       <Toolbar />
       <AppBar position="sticky" color="default" elevation={0} className={classes.appBar}>
-        <div style={{ marginTop: 20, display:'flex', justifyContent:'center'}}>
+        <div style={{ marginTop:'22px', display:'flex', justifyContent:'center'}}>
            <Category />
         </div>
     </AppBar>

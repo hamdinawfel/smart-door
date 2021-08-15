@@ -49,9 +49,9 @@ export default function ProductsLoading() {
                     <Skeleton 
                         key={item} 
                         variant="rect"
-                        width={300} 
+                        width="100%"
                         height={350}
-                        style={{borderRadius:19, margin:10}}/>
+                        style={{borderRadius:5, margin:10}}/>
                 </Grid>
             )}
          </Grid>
@@ -61,9 +61,9 @@ export default function ProductsLoading() {
                 <Skeleton 
                     key={item} 
                     variant="rect"
-                    width={380} 
+                    width="100%" 
                     height={350}
-                    style={{borderRadius:19, margin:10}}/>
+                    style={{borderRadius:5, margin:10}}/>
             </Grid>
             )}
          </Grid>  
@@ -75,7 +75,7 @@ export default function ProductsLoading() {
                     variant="rect"
                     width={380} 
                     height={350}
-                    style={{borderRadius:19, margin:10}}/>
+                    style={{borderRadius:5, margin:10}}/>
             </Grid>
             )}
          </Grid> 
@@ -85,9 +85,9 @@ export default function ProductsLoading() {
                 <Skeleton 
                     key={item} 
                     variant="rect"
-                    width={380} 
-                    height={350}
-                    style={{borderRadius:19, margin:10}}/>
+                    width={320} 
+                    height={280}
+                    style={{borderRadius:5, margin:10}}/>
             </Grid>
             )}
          </Grid>
