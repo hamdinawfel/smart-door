@@ -218,7 +218,7 @@ const useStyles = makeStyles(theme => ({
             </Button>
           </div>
           </div>
-          : // EMPTY CART
+          :
            <div>
               <Title title="Mon panier est vide" />
               <img src={empty} alt="Pannier vide" className={classes.emptyImage}/>
