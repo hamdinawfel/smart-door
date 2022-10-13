@@ -117,13 +117,8 @@ adminRouter.route('/track')
           {
             $group: {
               _id: "$products.title",
-              // sum: {
-              //   $sum: "$total"
-              // },
               best: {
                 $push: {
-                  // total: { $multiply: [ "$products.price", 2 ] }
-                  
                   price:"$products.price",
                   quantity:"$products.quantity",
                   total: { $multiply: [ "$price", "$quantity" ] },
